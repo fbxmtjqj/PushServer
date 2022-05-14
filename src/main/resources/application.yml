@@ -22,3 +22,10 @@ spring:
 
   config:
     import: application-secret.yml
+logging:
+  level:
+    org:
+      hibernate:
+        type:
+          descriptor:
+            sql: trace

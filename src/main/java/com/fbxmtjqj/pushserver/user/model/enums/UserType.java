@@ -10,7 +10,6 @@ public enum UserType {
     ADMIN("admin"),
     DEVELOPER("developer"),
     USER("user"),
-    NONE("not checked")
     ;
 
     private final String userType;

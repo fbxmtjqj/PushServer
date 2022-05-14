@@ -5,9 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
@@ -17,7 +15,6 @@ import java.time.LocalDateTime;
 @Table
 @Getter
 @Builder
-@DynamicInsert
 @NoArgsConstructor
 @AllArgsConstructor
 public class User {
@@ -34,8 +31,6 @@ public class User {
     private String password;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    @ColumnDefault("'not checked'")
     private UserType userType;
 
     @Column(nullable = false)

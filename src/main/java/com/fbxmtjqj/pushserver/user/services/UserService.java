@@ -12,8 +12,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Optional;
-
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -37,12 +35,8 @@ public class UserService {
     }
 
     public SignInResponse singin(final String userId, final String password) {
-        final Optional<User> userOpt = userRepository.findByUserId(userId);
-        if (userOpt.isEmpty()) {
-            throw new ServerException(ErrorCode.USER_NOT_FOUND);
-        }
-
-        final User user = userOpt.get();
+        final User user = userRepository.findByUserId(userId)
+                .orElseThrow(() -> new ServerException(ErrorCode.USER_NOT_FOUND));
 
         if (!passwordEncoder.matches(password, user.getPassword())) {
             throw new ServerException(ErrorCode.USER_SIGN_IN_FAILED);
