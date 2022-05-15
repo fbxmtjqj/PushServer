@@ -21,7 +21,7 @@ public class UserRepositoryTest {
     @Test
     @DisplayName("유저등록")
     public void addUser() {
-        final User user = getUser("userId", "password", "test");
+        final User user = getUser("userId"  , "password", "test");
 
         final User result = userRepository.save(user);
 
