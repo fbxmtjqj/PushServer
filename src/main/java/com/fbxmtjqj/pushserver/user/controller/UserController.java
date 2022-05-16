@@ -32,7 +32,7 @@ public class UserController {
     public ResponseEntity<SignInResponse> signIn(
             @RequestBody @Validated(ValidationGroups.SignInMarker.class) final UserRequest userRequest) {
 
-        final SignInResponse signInResponse = userService.singin(userRequest.getUserId(), userRequest.getPassword());
+        final SignInResponse signInResponse = userService.signin(userRequest.getUserId(), userRequest.getPassword());
 
         return ResponseEntity.status(HttpStatus.OK)
                 .body(signInResponse);

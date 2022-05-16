@@ -1,10 +1,7 @@
 package com.fbxmtjqj.pushserver.user.model.entity;
 
 import com.fbxmtjqj.pushserver.user.model.enums.UserType;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -30,6 +27,7 @@ public class User {
     @Column(nullable = false)
     private String password;
 
+    @Setter
     @Enumerated(EnumType.STRING)
     private UserType userType;
 

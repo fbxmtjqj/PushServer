@@ -5,6 +5,7 @@ import com.fbxmtjqj.pushserver.common.exception.ServerException;
 import com.fbxmtjqj.pushserver.user.model.dto.SignInResponse;
 import com.fbxmtjqj.pushserver.user.model.dto.UserAddResponse;
 import com.fbxmtjqj.pushserver.user.model.entity.User;
+import com.fbxmtjqj.pushserver.user.model.enums.UserType;
 import com.fbxmtjqj.pushserver.user.model.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -34,7 +35,7 @@ public class UserService {
                 .build();
     }
 
-    public SignInResponse singin(final String userId, final String password) {
+    public SignInResponse signin(final String userId, final String password) {
         final User user = userRepository.findByUserId(userId)
                 .orElseThrow(() -> new ServerException(ErrorCode.USER_NOT_FOUND));
 
@@ -49,5 +50,14 @@ public class UserService {
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
                 .build();
+    }
+
+    public void updateUserType(final String userId, final UserType userType) {
+        final User user = userRepository.findByUserId(userId)
+                .orElseThrow(() -> new ServerException(ErrorCode.USER_NOT_FOUND));
+
+        user.setUserType(userType);
+
+        userRepository.save(user);
     }
 }
