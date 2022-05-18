@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserController {
     private final UserService userService;
 
-    @PostMapping("/api/v1/addUser")
+    @PostMapping("/api/v1/add/user")
     public ResponseEntity<AddUserResponse> addUser(
             @RequestBody @Validated(ValidationGroups.UserAddMarker.class) final UserRequest userRequest) {
 

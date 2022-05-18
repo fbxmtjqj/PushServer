@@ -43,7 +43,7 @@ public class UserControllerTest {
     @Test
     @DisplayName("유저등록성공")
     public void successAddUser() throws Exception {
-        final String url = "/api/v1/addUser";
+        final String url = "/api/v1/add/user";
 
         final ResultActions resultActions = mockMvc.perform(
                 MockMvcRequestBuilders.post(url)
@@ -58,7 +58,7 @@ public class UserControllerTest {
     @MethodSource("failedAddUserParameter")
     @DisplayName("유저등록실패")
     public void failedAddUser(final String userId, final String password, final String siteNm) throws Exception {
-        final String url = "/api/v1/addUser";
+        final String url = "/api/v1/add/user";
 
         final ResultActions resultActions = mockMvc.perform(
                 MockMvcRequestBuilders.post(url)
