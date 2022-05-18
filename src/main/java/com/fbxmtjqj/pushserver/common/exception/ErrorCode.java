@@ -15,6 +15,7 @@ public enum ErrorCode {
     NOT_FOUND_TOKEN(HttpStatus.BAD_REQUEST, "Token Not found"),
     NOT_EQUAL_TOKEN(HttpStatus.BAD_REQUEST, "Token Not equal"),
     INVALID_TOKEN(HttpStatus.BAD_REQUEST, "Token Invalid"),
+    ACCESS_DENIED(HttpStatus.BAD_REQUEST,"ACCESS_DENIED"),
     UNKNOWN_EXCEPTION(HttpStatus.INTERNAL_SERVER_ERROR, "Unknown Exception"),
     ;
 
