@@ -1,23 +1,34 @@
 package com.fbxmtjqj.pushserver.user.controller;
 
-import com.fbxmtjqj.pushserver.user.model.dto.AddUserResponse;
-import com.fbxmtjqj.pushserver.user.model.dto.SignInResponse;
-import com.fbxmtjqj.pushserver.user.model.dto.UpdateUserTypeResponse;
-import com.fbxmtjqj.pushserver.user.model.dto.UserRequest;
+import com.fbxmtjqj.pushserver.user.model.dto.*;
 import com.fbxmtjqj.pushserver.user.model.validation.ValidationGroups;
+import com.fbxmtjqj.pushserver.user.services.UserReadService;
 import com.fbxmtjqj.pushserver.user.services.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
 public class UserController {
     private final UserService userService;
+    private final UserReadService userReadService;
+
+    @GetMapping ("/api/v1/users")
+    public ResponseEntity<List<GetUsersResponse>> getUsers() {
+
+        final List<GetUsersResponse> getUsersResponseList = userReadService.getUsers();
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(getUsersResponseList);
+    }
 
     @PostMapping("/api/v1/users")
     public ResponseEntity<AddUserResponse> addUser(

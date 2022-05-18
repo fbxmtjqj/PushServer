@@ -1,8 +1,9 @@
 package com.fbxmtjqj.pushserver.common.config;
 
-import com.fbxmtjqj.pushserver.common.config.jwt.JwtFilter;
 import com.fbxmtjqj.pushserver.common.exception.handler.SecurityHandler;
+import com.fbxmtjqj.pushserver.common.jwt.JwtFilter;
 import org.springframework.context.annotation.Bean;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -34,14 +35,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .sameOrigin()
             .and()
                 .exceptionHandling()
-                .accessDeniedHandler(new SecurityHandler())
-                .authenticationEntryPoint(new SecurityHandler())
+                    .accessDeniedHandler(new SecurityHandler())
+                    .authenticationEntryPoint(new SecurityHandler())
             .and()
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             .and()
                 .authorizeRequests()
-                .antMatchers(PUBLIC_URI).permitAll()
+                .antMatchers(HttpMethod.POST, "/api/v1/users", "/api/v1/signIn").permitAll()
                 .anyRequest().authenticated()
             .and()
                 .addFilterBefore(jwtFilter(), UsernamePasswordAuthenticationFilter.class);

@@ -1,6 +1,8 @@
 package com.fbxmtjqj.pushserver.user.controller;
 
+import com.fbxmtjqj.pushserver.user.model.dto.GetUsersResponse;
 import com.fbxmtjqj.pushserver.user.model.dto.UserRequest;
+import com.fbxmtjqj.pushserver.user.services.UserReadService;
 import com.fbxmtjqj.pushserver.user.services.UserService;
 import com.google.gson.Gson;
 import org.junit.jupiter.api.BeforeEach;
@@ -19,8 +21,10 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import java.util.Arrays;
 import java.util.stream.Stream;
 
+import static org.mockito.Mockito.doReturn;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(MockitoExtension.class)
@@ -29,6 +33,8 @@ public class UserControllerTest {
     private UserController target;
     @Mock
     private UserService userService;
+    @Mock
+    private UserReadService userReadService;
 
     private MockMvc mockMvc;
     private Gson gson;
@@ -43,7 +49,7 @@ public class UserControllerTest {
     @Test
     @DisplayName("유저등록성공")
     public void successAddUser() throws Exception {
-        final String url = "/api/v1/add/user";
+        final String url = "/api/v1/users";
 
         final ResultActions resultActions = mockMvc.perform(
                 MockMvcRequestBuilders.post(url)
@@ -58,7 +64,7 @@ public class UserControllerTest {
     @MethodSource("failedAddUserParameter")
     @DisplayName("유저등록실패")
     public void failedAddUser(final String userId, final String password, final String siteNm) throws Exception {
-        final String url = "/api/v1/add/user";
+        final String url = "/api/v1/users";
 
         final ResultActions resultActions = mockMvc.perform(
                 MockMvcRequestBuilders.post(url)
@@ -109,6 +115,26 @@ public class UserControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
         );
 
+        resultActions.andExpect(status().isOk());
+    }
+
+    @Test
+    @DisplayName("유저목록조회성공")
+    public void successGetUsers() throws Exception {
+        // given
+        final String url = "/api/v1/users";
+        doReturn(Arrays.asList(
+                GetUsersResponse.builder().build(),
+                GetUsersResponse.builder().build(),
+                GetUsersResponse.builder().build()
+        )).when(userReadService).getUsers();
+
+        // when
+        final ResultActions resultActions = mockMvc.perform(
+                MockMvcRequestBuilders.get(url)
+        );
+
+        // then
         resultActions.andExpect(status().isOk());
     }
 
