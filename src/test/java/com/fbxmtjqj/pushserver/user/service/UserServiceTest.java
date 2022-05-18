@@ -5,7 +5,7 @@ import com.fbxmtjqj.pushserver.common.exception.ServerException;
 import com.fbxmtjqj.pushserver.common.jwt.JwtService;
 import com.fbxmtjqj.pushserver.user.model.dto.AddUserResponse;
 import com.fbxmtjqj.pushserver.user.model.dto.SignInResponse;
-import com.fbxmtjqj.pushserver.user.model.dto.UpdateUserType;
+import com.fbxmtjqj.pushserver.user.model.dto.UpdateUserTypeResponse;
 import com.fbxmtjqj.pushserver.user.model.entity.User;
 import com.fbxmtjqj.pushserver.user.model.repository.UserRepository;
 import com.fbxmtjqj.pushserver.user.services.UserService;
@@ -86,7 +86,7 @@ public class UserServiceTest {
     public void successUpdateUserType() {
         doReturn(Optional.of(getUser())).when(userRepository).findByUserId("userId");
 
-        final UpdateUserType result = target.updateUserType("userId", "USER");
+        final UpdateUserTypeResponse result = target.updateUserType("userId", "USER");
 
         assertThat(result.getHttpStatus()).isEqualTo(HttpStatus.OK);
 

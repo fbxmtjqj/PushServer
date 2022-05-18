@@ -2,7 +2,7 @@ package com.fbxmtjqj.pushserver.user.controller;
 
 import com.fbxmtjqj.pushserver.user.model.dto.AddUserResponse;
 import com.fbxmtjqj.pushserver.user.model.dto.SignInResponse;
-import com.fbxmtjqj.pushserver.user.model.dto.UpdateUserType;
+import com.fbxmtjqj.pushserver.user.model.dto.UpdateUserTypeResponse;
 import com.fbxmtjqj.pushserver.user.model.dto.UserRequest;
 import com.fbxmtjqj.pushserver.user.model.validation.ValidationGroups;
 import com.fbxmtjqj.pushserver.user.services.UserService;
@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserController {
     private final UserService userService;
 
-    @PostMapping("/api/v1/add/user")
+    @PostMapping("/api/v1/users")
     public ResponseEntity<AddUserResponse> addUser(
             @RequestBody @Validated(ValidationGroups.UserAddMarker.class) final UserRequest userRequest) {
 
@@ -40,10 +40,10 @@ public class UserController {
     }
 
     @PostMapping("/api/v1/update/userType")
-    public ResponseEntity<UpdateUserType> updateUserType(
+    public ResponseEntity<UpdateUserTypeResponse> updateUserType(
             @RequestBody final UserRequest userRequest) {
 
-        final UpdateUserType result = userService.updateUserType(userRequest.getUserId(), userRequest.getUserType());
+        final UpdateUserTypeResponse result = userService.updateUserType(userRequest.getUserId(), userRequest.getUserType());
 
         return ResponseEntity.status(HttpStatus.OK)
                 .body(result);

@@ -5,7 +5,7 @@ import com.fbxmtjqj.pushserver.common.exception.ServerException;
 import com.fbxmtjqj.pushserver.common.jwt.JwtService;
 import com.fbxmtjqj.pushserver.user.model.dto.AddUserResponse;
 import com.fbxmtjqj.pushserver.user.model.dto.SignInResponse;
-import com.fbxmtjqj.pushserver.user.model.dto.UpdateUserType;
+import com.fbxmtjqj.pushserver.user.model.dto.UpdateUserTypeResponse;
 import com.fbxmtjqj.pushserver.user.model.entity.User;
 import com.fbxmtjqj.pushserver.user.model.enums.UserType;
 import com.fbxmtjqj.pushserver.user.model.repository.UserRepository;
@@ -54,7 +54,7 @@ public class UserService {
                 .build();
     }
 
-    public UpdateUserType updateUserType(final String userId, final String type) {
+    public UpdateUserTypeResponse updateUserType(final String userId, final String type) {
         final User user = userRepository.findByUserId(userId)
                 .orElseThrow(() -> new ServerException(ErrorCode.USER_NOT_FOUND));
 
@@ -71,7 +71,7 @@ public class UserService {
 
         userRepository.save(user);
 
-        return UpdateUserType.builder()
+        return UpdateUserTypeResponse.builder()
                 .httpStatus(HttpStatus.OK)
                 .build();
     }
