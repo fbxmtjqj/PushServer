@@ -2,12 +2,12 @@ package com.fbxmtjqj.pushserver.user.service;
 
 import com.fbxmtjqj.pushserver.common.exception.ErrorCode;
 import com.fbxmtjqj.pushserver.common.exception.ServerException;
+import com.fbxmtjqj.pushserver.common.jwt.JwtService;
+import com.fbxmtjqj.pushserver.user.model.dto.AddUserResponse;
 import com.fbxmtjqj.pushserver.user.model.dto.SignInResponse;
-import com.fbxmtjqj.pushserver.user.model.dto.UserAddResponse;
+import com.fbxmtjqj.pushserver.user.model.dto.UpdateUserType;
 import com.fbxmtjqj.pushserver.user.model.entity.User;
-import com.fbxmtjqj.pushserver.user.model.enums.UserType;
 import com.fbxmtjqj.pushserver.user.model.repository.UserRepository;
-import com.fbxmtjqj.pushserver.user.services.TokenService;
 import com.fbxmtjqj.pushserver.user.services.UserService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -34,14 +34,14 @@ public class UserServiceTest {
     @Mock
     private PasswordEncoder passwordEncoder;
     @Mock
-    private TokenService tokenService;
+    private JwtService jwtService;
 
     @Test
     @DisplayName("유저추가성공")
     public void successAddUser() {
         doReturn(getUser()).when(userRepository).save(any(User.class));
 
-        final UserAddResponse result = target.addUser("userId", "password", "test");
+        final AddUserResponse result = target.addUser("userId", "password", "test");
 
         assertThat(result.getHttpStatus()).isEqualTo(HttpStatus.OK);
 
@@ -86,19 +86,33 @@ public class UserServiceTest {
     public void successUpdateUserType() {
         doReturn(Optional.of(getUser())).when(userRepository).findByUserId("userId");
 
-        target.updateUserType("userId", UserType.USER);
+        final UpdateUserType result = target.updateUserType("userId", "USER");
+
+        assertThat(result.getHttpStatus()).isEqualTo(HttpStatus.OK);
 
         verify(userRepository, times(1)).findByUserId("userId");
     }
 
     @Test
-    @DisplayName("UserType업데이트성공_유저조회실패")
-    public void failUpdateUserTypeNotFound() {
+    @DisplayName("UserType업데이트_유저조회실패")
+    public void failUpdateUserTypeNotFoundUser() {
         doReturn(Optional.empty()).when(userRepository).findByUserId("userId");
 
-        final ServerException result = assertThrows(ServerException.class, () -> target.updateUserType("userId", UserType.USER));
+        final ServerException result = assertThrows(ServerException.class, () -> target.updateUserType("userId", "USER"));
 
         assertThat(result.getErrorResult()).isEqualTo(ErrorCode.USER_NOT_FOUND);
+
+        verify(userRepository, times(1)).findByUserId("userId");
+    }
+
+    @Test
+    @DisplayName("UserType업데이트_유저타입")
+    public void failUpdateUserTypeIllegalArgument() {
+        doReturn(Optional.of(getUser())).when(userRepository).findByUserId("userId");
+
+        final ServerException result = assertThrows(ServerException.class, () -> target.updateUserType("userId", "test"));
+
+        assertThat(result.getErrorResult()).isEqualTo(ErrorCode.ILLEGAL_ARGUMENT);
 
         verify(userRepository, times(1)).findByUserId("userId");
     }

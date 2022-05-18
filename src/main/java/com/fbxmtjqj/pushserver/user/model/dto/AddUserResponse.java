@@ -8,7 +8,7 @@ import org.springframework.http.HttpStatus;
 @Getter
 @Builder
 @RequiredArgsConstructor
-public class UserAddResponse {
+public class AddUserResponse {
 
     private final HttpStatus httpStatus;
 }

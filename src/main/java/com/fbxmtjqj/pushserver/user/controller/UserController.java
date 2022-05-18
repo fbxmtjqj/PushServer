@@ -1,7 +1,8 @@
 package com.fbxmtjqj.pushserver.user.controller;
 
+import com.fbxmtjqj.pushserver.user.model.dto.AddUserResponse;
 import com.fbxmtjqj.pushserver.user.model.dto.SignInResponse;
-import com.fbxmtjqj.pushserver.user.model.dto.UserAddResponse;
+import com.fbxmtjqj.pushserver.user.model.dto.UpdateUserType;
 import com.fbxmtjqj.pushserver.user.model.dto.UserRequest;
 import com.fbxmtjqj.pushserver.user.model.validation.ValidationGroups;
 import com.fbxmtjqj.pushserver.user.services.UserService;
@@ -19,10 +20,10 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping("/api/v1/addUser")
-    public ResponseEntity<UserAddResponse> addUser(
+    public ResponseEntity<AddUserResponse> addUser(
             @RequestBody @Validated(ValidationGroups.UserAddMarker.class) final UserRequest userRequest) {
 
-        final UserAddResponse userAddResponse = userService.addUser(userRequest.getUserId(), userRequest.getPassword(), userRequest.getSiteNm());
+        final AddUserResponse userAddResponse = userService.addUser(userRequest.getUserId(), userRequest.getPassword(), userRequest.getSiteNm());
 
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(userAddResponse);
@@ -36,5 +37,15 @@ public class UserController {
 
         return ResponseEntity.status(HttpStatus.OK)
                 .body(signInResponse);
+    }
+
+    @PostMapping("/api/v1/update/userType")
+    public ResponseEntity<UpdateUserType> updateUserType(
+            @RequestBody final UserRequest userRequest) {
+
+        final UpdateUserType result = userService.updateUserType(userRequest.getUserId(), userRequest.getUserType());
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(result);
     }
 }

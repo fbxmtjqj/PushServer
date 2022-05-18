@@ -22,4 +22,6 @@ public class UserRequest {
 
     @NotNull(groups = {ValidationGroups.UserAddMarker.class})
     private final String siteNm;
+
+    private final String userType;
 }

@@ -25,10 +25,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @ExtendWith(MockitoExtension.class)
 public class UserControllerTest {
-
     @InjectMocks
     private UserController target;
-
     @Mock
     private UserService userService;
 
@@ -71,11 +69,63 @@ public class UserControllerTest {
         resultActions.andExpect(status().isBadRequest());
     }
 
+    @Test
+    @DisplayName("유저SignIn성공")
+    public void successSignIn() throws Exception {
+        final String url = "/api/v1/signIn";
+
+        final ResultActions resultActions = mockMvc.perform(
+                MockMvcRequestBuilders.post(url)
+                        .content(gson.toJson(getUser("test", "test")))
+                        .contentType(MediaType.APPLICATION_JSON)
+        );
+
+        resultActions.andExpect(status().isOk());
+    }
+
+    @ParameterizedTest
+    @MethodSource("failedSignInParameter")
+    @DisplayName("유저SignIn실패")
+    public void failedSignIn(final String userId, final String password) throws Exception {
+        final String url = "/api/v1/signIn";
+
+        final ResultActions resultActions = mockMvc.perform(
+                MockMvcRequestBuilders.post(url)
+                        .content(gson.toJson(getUser(userId, password)))
+                        .contentType(MediaType.APPLICATION_JSON)
+        );
+
+        resultActions.andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @DisplayName("UserType 업데이트 성공")
+    public void successUpdateUserType() throws Exception {
+        final String url = "/api/v1/update/userType";
+
+        final ResultActions resultActions = mockMvc.perform(
+                MockMvcRequestBuilders.post(url)
+                        .content(gson.toJson(getUser("test", null, null, "USER")))
+                        .contentType(MediaType.APPLICATION_JSON)
+        );
+
+        resultActions.andExpect(status().isOk());
+    }
+
+    private UserRequest getUser(final String userId, final String password) {
+        return getUser(userId, password, null, null);
+    }
+
     private UserRequest getUser(final String userId, final String password, final String siteNm) {
+        return getUser(userId, password, siteNm, null);
+    }
+
+    private UserRequest getUser(final String userId, final String password, final String siteNm, final String userType) {
         return UserRequest.builder()
                 .userId(userId)
                 .password(password)
                 .siteNm(siteNm)
+                .userType(userType)
                 .build();
     }
 
@@ -84,6 +134,13 @@ public class UserControllerTest {
                 Arguments.of(null, "test", "test"),
                 Arguments.of("test", null, "test"),
                 Arguments.of("test", "test", null)
+        );
+    }
+
+    private static Stream<Arguments> failedSignInParameter() {
+        return Stream.of(
+                Arguments.of(null, "test"),
+                Arguments.of("test", null)
         );
     }
 }
