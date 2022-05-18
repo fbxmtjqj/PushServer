@@ -14,7 +14,6 @@ import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.util.StringUtils;
 
 import javax.servlet.RequestDispatcher;
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -27,7 +26,7 @@ public class SecurityHandler implements AccessDeniedHandler, AuthenticationEntry
 
     @Override
     public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException except)
-            throws IOException, ServletException {
+            throws IOException {
         String path = getRequestPath(request);
         String trackCode = UUID.randomUUID().toString();
 
@@ -48,7 +47,7 @@ public class SecurityHandler implements AccessDeniedHandler, AuthenticationEntry
 
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException except)
-            throws IOException, ServletException {
+            throws IOException {
         String path = getRequestPath(request);
         String trackCode = UUID.randomUUID().toString();
         ErrorCode errorCode = ErrorCode.UNAUTHORIZED;
