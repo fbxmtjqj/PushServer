@@ -1,8 +1,7 @@
-package com.fbxmtjqj.pushserver.common.config.jwt;
+package com.fbxmtjqj.pushserver.common.jwt;
 
 import com.fbxmtjqj.pushserver.common.exception.ErrorCode;
 import com.fbxmtjqj.pushserver.common.exception.ServerException;
-import com.fbxmtjqj.pushserver.common.jwt.JwtService;
 import com.fbxmtjqj.pushserver.user.model.entity.User;
 import com.fbxmtjqj.pushserver.user.model.enums.UserType;
 import com.fbxmtjqj.pushserver.user.model.repository.UserRepository;
