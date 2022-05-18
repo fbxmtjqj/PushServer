@@ -1,5 +1,7 @@
 package com.fbxmtjqj.pushserver.common.exception.handler;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fbxmtjqj.pushserver.common.exception.ErrorCode;
 import com.fbxmtjqj.pushserver.common.model.dto.ErrorResponse;
@@ -34,8 +36,11 @@ public class SecurityHandler implements AccessDeniedHandler, AuthenticationEntry
         ErrorResponse errorResponse = ErrorResponse.builder()
                 .errorCode(ErrorCode.ACCESS_DENIED)
                 .build();
+
         ObjectMapper mapper = new ObjectMapper();
+        mapper.setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY);
         String json = mapper.writeValueAsString(errorResponse);
+
         response.setContentType("application/json");
         response.setStatus(HttpStatus.FORBIDDEN.value());
         response.getWriter().write(json);
@@ -51,8 +56,11 @@ public class SecurityHandler implements AccessDeniedHandler, AuthenticationEntry
         ErrorResponse errorResponse = ErrorResponse.builder()
                 .errorCode(errorCode)
                 .build();
+
         ObjectMapper mapper = new ObjectMapper();
+        mapper.setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY);
         String json = mapper.writeValueAsString(errorResponse);
+
         response.setContentType("application/json");
         response.setStatus(HttpStatus.UNAUTHORIZED.value());
         response.getWriter().write(json);

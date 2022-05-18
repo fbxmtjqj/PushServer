@@ -58,7 +58,6 @@ public class JwtService implements InitializingBean {
         Instant expired = now.plusSeconds(expiredSec);
 
         Map<String, String> payloads = new HashMap<>();
-        payloads.put("type", "");
         payloads.put("value1", user.getId().toString());
         payloads.put("value2", user.getUserId());
 
