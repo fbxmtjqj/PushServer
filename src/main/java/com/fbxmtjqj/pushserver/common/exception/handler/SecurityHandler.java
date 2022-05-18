@@ -46,14 +46,8 @@ public class SecurityHandler implements AccessDeniedHandler, AuthenticationEntry
             throws IOException, ServletException {
         String path = getRequestPath(request);
         String trackCode = UUID.randomUUID().toString();
-        ErrorCode errorCode = (ErrorCode) request.getAttribute("exception");
-        if (errorCode == null) {
-            errorCode = ErrorCode.UNKNOWN_EXCEPTION;
-            printLog(path, trackCode, errorCode, except);
-        } else {
-            printLog(path, trackCode, errorCode, except);
-        }
-
+        ErrorCode errorCode = ErrorCode.UNAUTHORIZED;
+        printLog(path, trackCode, errorCode, except);
         ErrorResponse errorResponse = ErrorResponse.builder()
                 .errorCode(errorCode)
                 .build();
