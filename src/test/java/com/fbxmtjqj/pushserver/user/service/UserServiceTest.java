@@ -49,6 +49,16 @@ public class UserServiceTest {
     }
 
     @Test
+    @DisplayName("유저추가 실패 - 이미 존재하는 유저")
+    public void failAddUserUserAlreadyRegister() {
+        doReturn(Optional.of(getUser())).when(userRepository).findByUserId("userId");
+
+        final ServerException result = assertThrows(ServerException.class, () -> target.addUser("userId", "password","test"));
+
+        assertThat(result.getErrorResult()).isEqualTo(ErrorCode.USER_ALREADY_REGISTER);
+    }
+
+    @Test
     @DisplayName("유저SignIn 성공")
     public void successSignIn() {
         doReturn(Optional.of(getUser())).when(userRepository).findByUserId("userId");

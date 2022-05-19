@@ -24,6 +24,11 @@ public class UserService {
     private final JwtService jwtService;
 
     public AddUserResponse addUser(final String userId, final String password, final String siteNm) {
+        var isUserId = userRepository.findByUserId(userId);
+        if (isUserId.isPresent()){
+            throw new ServerException(ErrorCode.USER_ALREADY_REGISTER);
+        }
+
         final User user = User.builder()
                 .userId(userId)
                 .password(passwordEncoder.encode(password))
