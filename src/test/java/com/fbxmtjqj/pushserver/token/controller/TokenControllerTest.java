@@ -44,7 +44,7 @@ public class TokenControllerTest {
     }
 
     @Test
-    @DisplayName("accessToken 재발급 성공 - 헤더 없음")
+    @DisplayName("accessToken 재발급 실패 - 헤더 없음")
     public void failAccessTokenHeaderNotFound() throws Exception {
         final String url = "/refresh/accessToken";
 

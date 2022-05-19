@@ -47,7 +47,7 @@ public class UserControllerTest {
     }
 
     @Test
-    @DisplayName("유저등록성공")
+    @DisplayName("유저등록 성공")
     public void successAddUser() throws Exception {
         final String url = "/api/v1/users";
 
@@ -61,9 +61,9 @@ public class UserControllerTest {
     }
 
     @ParameterizedTest
-    @MethodSource("failedAddUserParameter")
-    @DisplayName("유저등록실패")
-    public void failedAddUser(final String userId, final String password, final String siteNm) throws Exception {
+    @MethodSource("failAddUserParameter")
+    @DisplayName("유저등록 실패 - 잘못된 파라미터")
+    public void failAddUser(final String userId, final String password, final String siteNm) throws Exception {
         final String url = "/api/v1/users";
 
         final ResultActions resultActions = mockMvc.perform(
@@ -76,7 +76,7 @@ public class UserControllerTest {
     }
 
     @Test
-    @DisplayName("유저SignIn성공")
+    @DisplayName("유저SignIn 성공")
     public void successSignIn() throws Exception {
         final String url = "/api/v1/signIn";
 
@@ -90,8 +90,8 @@ public class UserControllerTest {
     }
 
     @ParameterizedTest
-    @MethodSource("failedSignInParameter")
-    @DisplayName("유저SignIn실패")
+    @MethodSource("failSignInParameter")
+    @DisplayName("유저SignIn 실패 - 잘못된 파라미터")
     public void failedSignIn(final String userId, final String password) throws Exception {
         final String url = "/api/v1/signIn";
 
@@ -119,7 +119,7 @@ public class UserControllerTest {
     }
 
     @Test
-    @DisplayName("유저목록조회성공")
+    @DisplayName("유저목록조회 성공")
     public void successGetUsers() throws Exception {
         // given
         final String url = "/api/v1/users";
@@ -155,7 +155,7 @@ public class UserControllerTest {
                 .build();
     }
 
-    private static Stream<Arguments> failedAddUserParameter() {
+    private static Stream<Arguments> failAddUserParameter() {
         return Stream.of(
                 Arguments.of(null, "test", "test"),
                 Arguments.of("test", null, "test"),
@@ -163,7 +163,7 @@ public class UserControllerTest {
         );
     }
 
-    private static Stream<Arguments> failedSignInParameter() {
+    private static Stream<Arguments> failSignInParameter() {
         return Stream.of(
                 Arguments.of(null, "test"),
                 Arguments.of("test", null)

@@ -25,7 +25,7 @@ public class UserReadServiceTest {
     private UserRepository userRepository;
 
     @Test
-    @DisplayName("유저조회성공")
+    @DisplayName("유저조회 성공")
     public void successAddUser() {
         doReturn(Arrays.asList(
                 User.builder().build(),

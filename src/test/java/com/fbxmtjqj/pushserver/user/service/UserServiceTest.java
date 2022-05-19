@@ -37,7 +37,7 @@ public class UserServiceTest {
     private JwtService jwtService;
 
     @Test
-    @DisplayName("유저추가성공")
+    @DisplayName("유저추가 성공")
     public void successAddUser() {
         doReturn(getUser()).when(userRepository).save(any(User.class));
 
@@ -49,7 +49,7 @@ public class UserServiceTest {
     }
 
     @Test
-    @DisplayName("유저signin성공")
+    @DisplayName("유저SignIn 성공")
     public void successSignIn() {
         doReturn(Optional.of(getUser())).when(userRepository).findByUserId("userId");
         doReturn(true).when(passwordEncoder).matches(anyString(), anyString());
@@ -58,7 +58,7 @@ public class UserServiceTest {
     }
 
     @Test
-    @DisplayName("유저signin실패_유저조회실패")
+    @DisplayName("유저SignIn 실패 - 유저 조회 실패")
     public void failSignInUserNotFound() {
         doReturn(Optional.empty()).when(userRepository).findByUserId("userId");
 
@@ -70,7 +70,7 @@ public class UserServiceTest {
     }
 
     @Test
-    @DisplayName("유저signin실패_비밀번호X")
+    @DisplayName("유저SignIn 실패 - 비밀번호 미일치")
     public void failSignInPasswordNotEqual() {
         doReturn(Optional.of(getUser())).when(userRepository).findByUserId("userId");
 
@@ -82,7 +82,7 @@ public class UserServiceTest {
     }
 
     @Test
-    @DisplayName("UserType업데이트성공")
+    @DisplayName("UserType 업데이트 성공")
     public void successUpdateUserType() {
         doReturn(Optional.of(getUser())).when(userRepository).findByUserId("userId");
 
@@ -94,7 +94,7 @@ public class UserServiceTest {
     }
 
     @Test
-    @DisplayName("UserType업데이트_유저조회실패")
+    @DisplayName("UserType 업데이트 실패 - 유저 조회 실패")
     public void failUpdateUserTypeNotFoundUser() {
         doReturn(Optional.empty()).when(userRepository).findByUserId("userId");
 
@@ -106,7 +106,7 @@ public class UserServiceTest {
     }
 
     @Test
-    @DisplayName("UserType업데이트_유저타입")
+    @DisplayName("UserType 업데이트 실패 - UserType 에러")
     public void failUpdateUserTypeIllegalArgument() {
         doReturn(Optional.of(getUser())).when(userRepository).findByUserId("userId");
 
