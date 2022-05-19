@@ -24,8 +24,8 @@ public class UserService {
     private final JwtService jwtService;
 
     public AddUserResponse addUser(final String userId, final String password, final String siteNm) {
-        var isUserId = userRepository.findByUserId(userId);
-        if (isUserId.isPresent()){
+        boolean isUserId = userRepository.findByUserId(userId).isPresent();
+        if (isUserId) {
             throw new ServerException(ErrorCode.USER_ALREADY_REGISTER);
         }
 
@@ -66,7 +66,7 @@ public class UserService {
         UserType userType;
         try {
             userType = UserType.valueOf(type);
-        } catch (IllegalArgumentException ex)  {
+        } catch (IllegalArgumentException ex) {
             throw new ServerException(ErrorCode.ILLEGAL_ARGUMENT);
         } catch (Exception ex) {
             throw new ServerException(ErrorCode.UNKNOWN_EXCEPTION);
