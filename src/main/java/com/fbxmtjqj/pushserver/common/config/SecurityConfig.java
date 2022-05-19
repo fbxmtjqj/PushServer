@@ -15,10 +15,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private static final String[] PUBLIC_URI = {
-            // 유저 추가 및 로그인
-            "/api/v1/addUser",
-            "/api/v1/signIn",
             // Swagger
+            "/v3/api-docs/**",
             "/api-docs.html",
             "/swagger-ui/**",
             "/v1/docs/**"
@@ -42,6 +40,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             .and()
                 .authorizeRequests()
+                .antMatchers(PUBLIC_URI).permitAll()
                 .antMatchers(HttpMethod.POST, "/api/v1/users", "/api/v1/signIn").permitAll()
                 .antMatchers(HttpMethod.GET, "/refresh/accessToken").permitAll()
                 .anyRequest().authenticated()
