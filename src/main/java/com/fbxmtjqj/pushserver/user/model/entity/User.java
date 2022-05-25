@@ -1,12 +1,10 @@
 package com.fbxmtjqj.pushserver.user.model.entity;
 
+import com.fbxmtjqj.pushserver.common.model.entity.EntityDate;
 import com.fbxmtjqj.pushserver.user.model.enums.UserType;
 import lombok.*;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 
 @Entity
 @Table
@@ -14,8 +12,7 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class User {
-
+public class User extends EntityDate {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false)
@@ -34,12 +31,4 @@ public class User {
     @ManyToOne
     @JoinColumn(name = "GROUP_ID")
     private Group group;
-
-    @CreationTimestamp
-    @Column(nullable = false, length = 20, updatable = false)
-    private LocalDateTime createdAt;
-
-    @UpdateTimestamp
-    @Column(length = 20)
-    private LocalDateTime updatedAt;
 }

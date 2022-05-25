@@ -1,5 +1,6 @@
 package com.fbxmtjqj.pushserver.user.model.entity;
 
+import com.fbxmtjqj.pushserver.common.model.entity.EntityDate;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -13,8 +14,7 @@ import javax.persistence.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Group {
-
+public class Group extends EntityDate {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false)
