@@ -70,6 +70,8 @@ public class UserServiceTest {
         doReturn(true).when(passwordEncoder).matches(anyString(), anyString());
 
         final SignInResponse result = target.signIn("userId", "password");
+
+        assertThat(result).isNotNull();
     }
 
     @Test
@@ -133,14 +135,10 @@ public class UserServiceTest {
     }
 
     private User getUser() {
-        return getUser("userId", "password", "test");
-    }
-
-    private User getUser(final String userId, final String password, final String siteNm) {
         return User.builder()
-                .userId(userId)
-                .password(password)
-                .group(Group.builder().name(siteNm).build())
+                .userId("userId")
+                .password("password")
+                .group(Group.builder().name("test").build())
                 .build();
     }
 }

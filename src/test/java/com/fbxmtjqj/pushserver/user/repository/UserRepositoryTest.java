@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
@@ -22,12 +24,15 @@ public class UserRepositoryTest {
     @DisplayName("유저등록")
     public void addUser() {
         final User user = getUser();
+        final LocalDateTime now = LocalDateTime.now().withNano(0);
 
         final User result = userRepository.save(user);
 
         assertThat(result.getId()).isNotNull();
         assertThat(result.getUserId()).isEqualTo("userId");
         assertThat(result.getPassword()).isEqualTo("password");
+        assertThat(result.getCreatedDate().withNano(0)).isEqualTo(now);
+        assertThat(result.getModifiedDate().withNano(0)).isEqualTo(now);
     }
 
     @Test
