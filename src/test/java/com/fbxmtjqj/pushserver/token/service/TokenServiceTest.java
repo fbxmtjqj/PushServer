@@ -67,7 +67,6 @@ public class TokenServiceTest {
         return User.builder()
                 .userId("userId")
                 .password("password")
-                .siteNm("siteNm")
                 .build();
     }
 }

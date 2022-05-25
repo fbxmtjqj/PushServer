@@ -23,7 +23,7 @@ public class UserReadService {
                 .map(v -> GetUsersResponse.builder()
                         .userId(v.getUserId())
                         .userType(v.getUserType())
-                        .siteNm(v.getSiteNm())
+                        .siteNm(v.getGroup())
                         .build())
                 .collect(Collectors.toList());
     }

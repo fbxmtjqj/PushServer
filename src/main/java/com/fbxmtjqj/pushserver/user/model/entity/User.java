@@ -31,8 +31,9 @@ public class User {
     @Enumerated(EnumType.STRING)
     private UserType userType;
 
-    @Column(nullable = false)
-    private String siteNm;
+    @ManyToOne
+    @JoinColumn(name = "GROUP_ID")
+    private Group group;
 
     @CreationTimestamp
     @Column(nullable = false, length = 20, updatable = false)

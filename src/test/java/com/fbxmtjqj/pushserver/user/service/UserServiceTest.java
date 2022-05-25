@@ -6,7 +6,9 @@ import com.fbxmtjqj.pushserver.common.jwt.JwtService;
 import com.fbxmtjqj.pushserver.user.model.dto.AddUserResponse;
 import com.fbxmtjqj.pushserver.user.model.dto.SignInResponse;
 import com.fbxmtjqj.pushserver.user.model.dto.UpdateUserTypeResponse;
+import com.fbxmtjqj.pushserver.user.model.entity.Group;
 import com.fbxmtjqj.pushserver.user.model.entity.User;
+import com.fbxmtjqj.pushserver.user.model.repository.GroupRepository;
 import com.fbxmtjqj.pushserver.user.model.repository.UserRepository;
 import com.fbxmtjqj.pushserver.user.services.UserService;
 import org.junit.jupiter.api.DisplayName;
@@ -32,6 +34,8 @@ public class UserServiceTest {
     @Mock
     private UserRepository userRepository;
     @Mock
+    private GroupRepository groupRepository;
+    @Mock
     private PasswordEncoder passwordEncoder;
     @Mock
     private JwtService jwtService;
@@ -46,6 +50,7 @@ public class UserServiceTest {
         assertThat(result.getHttpStatus()).isEqualTo(HttpStatus.OK);
 
         verify(userRepository, times(1)).save(any(User.class));
+        verify(groupRepository, times(1)).save(any(Group.class));
     }
 
     @Test
@@ -64,7 +69,7 @@ public class UserServiceTest {
         doReturn(Optional.of(getUser())).when(userRepository).findByUserId("userId");
         doReturn(true).when(passwordEncoder).matches(anyString(), anyString());
 
-        final SignInResponse result = target.signin("userId", "password");
+        final SignInResponse result = target.signIn("userId", "password");
     }
 
     @Test
@@ -72,7 +77,7 @@ public class UserServiceTest {
     public void failSignInUserNotFound() {
         doReturn(Optional.empty()).when(userRepository).findByUserId("userId");
 
-        final ServerException result = assertThrows(ServerException.class, () -> target.signin("userId", "password"));
+        final ServerException result = assertThrows(ServerException.class, () -> target.signIn("userId", "password"));
 
         assertThat(result.getErrorResult()).isEqualTo(ErrorCode.USER_NOT_FOUND);
 
@@ -84,7 +89,7 @@ public class UserServiceTest {
     public void failSignInPasswordNotEqual() {
         doReturn(Optional.of(getUser())).when(userRepository).findByUserId("userId");
 
-        final ServerException result = assertThrows(ServerException.class, () -> target.signin("userId", "ttt"));
+        final ServerException result = assertThrows(ServerException.class, () -> target.signIn("userId", "ttt"));
 
         assertThat(result.getErrorResult()).isEqualTo(ErrorCode.USER_SIGN_IN_FAILED);
 
@@ -135,7 +140,7 @@ public class UserServiceTest {
         return User.builder()
                 .userId(userId)
                 .password(password)
-                .siteNm(siteNm)
+                .group(Group.builder().name(siteNm).build())
                 .build();
     }
 }

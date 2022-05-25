@@ -21,20 +21,19 @@ public class UserRepositoryTest {
     @Test
     @DisplayName("유저등록")
     public void addUser() {
-        final User user = getUser("userId", "password", "test");
+        final User user = getUser();
 
         final User result = userRepository.save(user);
 
         assertThat(result.getId()).isNotNull();
         assertThat(result.getUserId()).isEqualTo("userId");
         assertThat(result.getPassword()).isEqualTo("password");
-        assertThat(result.getSiteNm()).isEqualTo("test");
     }
 
     @Test
     @DisplayName("유저조회")
     public void searchUser() {
-        final User user = getUser("userId", "password", "test");
+        final User user = getUser();
 
         userRepository.save(user);
         final User findResult = userRepository.findByUserId("userId")
@@ -43,15 +42,13 @@ public class UserRepositoryTest {
         assertThat(findResult).isNotNull();
         assertThat(findResult.getUserId()).isEqualTo("userId");
         assertThat(findResult.getPassword()).isEqualTo("password");
-        assertThat(findResult.getSiteNm()).isEqualTo("test");
         assertThat(findResult.getUserType()).isNull();
     }
 
-    private User getUser(final String userId, final String password, final String siteNm) {
+    private User getUser() {
         return User.builder()
-                .userId(userId)
-                .password(password)
-                .siteNm(siteNm)
+                .userId("userId")
+                .password("password")
                 .build();
     }
 }

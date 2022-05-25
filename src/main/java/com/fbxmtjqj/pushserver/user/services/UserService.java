@@ -6,8 +6,10 @@ import com.fbxmtjqj.pushserver.common.jwt.JwtService;
 import com.fbxmtjqj.pushserver.user.model.dto.AddUserResponse;
 import com.fbxmtjqj.pushserver.user.model.dto.SignInResponse;
 import com.fbxmtjqj.pushserver.user.model.dto.UpdateUserTypeResponse;
+import com.fbxmtjqj.pushserver.user.model.entity.Group;
 import com.fbxmtjqj.pushserver.user.model.entity.User;
 import com.fbxmtjqj.pushserver.user.model.enums.UserType;
+import com.fbxmtjqj.pushserver.user.model.repository.GroupRepository;
 import com.fbxmtjqj.pushserver.user.model.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -20,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class UserService {
     private final UserRepository userRepository;
+    private final GroupRepository groupRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
 
@@ -29,10 +32,13 @@ public class UserService {
             throw new ServerException(ErrorCode.USER_ALREADY_REGISTER);
         }
 
+        Group group = groupRepository.findByName(siteNm).orElseGet(() -> Group.builder().name(siteNm).build());
+        groupRepository.save(group);
+
         final User user = User.builder()
                 .userId(userId)
                 .password(passwordEncoder.encode(password))
-                .siteNm(siteNm)
+                .group(group)
                 .build();
 
         userRepository.save(user);
@@ -42,7 +48,7 @@ public class UserService {
                 .build();
     }
 
-    public SignInResponse signin(final String userId, final String password) {
+    public SignInResponse signIn(final String userId, final String password) {
         final User user = userRepository.findByUserId(userId)
                 .orElseThrow(() -> new ServerException(ErrorCode.USER_NOT_FOUND));
 
