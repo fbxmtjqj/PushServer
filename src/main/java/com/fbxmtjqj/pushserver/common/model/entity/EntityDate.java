@@ -1,8 +1,8 @@
 package com.fbxmtjqj.pushserver.common.model.entity;
 
 import lombok.Getter;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.Column;
@@ -14,11 +14,11 @@ import java.time.LocalDateTime;
 @MappedSuperclass
 @Getter
 public abstract class EntityDate {
-    @CreationTimestamp
+    @CreatedDate
     @Column(nullable = false, length = 20, updatable = false)
-    private LocalDateTime createdAt;
+    private LocalDateTime createdDate;
 
-    @UpdateTimestamp
+    @LastModifiedDate
     @Column(length = 20)
-    private LocalDateTime updatedAt;
+    private LocalDateTime modifiedDate;
 }
