@@ -8,8 +8,6 @@ import com.fbxmtjqj.pushserver.fcm.model.dto.FCMMessageDTO;
 import com.fbxmtjqj.pushserver.fcm.model.dto.SendMessageResponse;
 import com.fbxmtjqj.pushserver.fcm.model.entity.FCM;
 import com.fbxmtjqj.pushserver.fcm.model.repository.FCMRepository;
-import com.fbxmtjqj.pushserver.user.model.entity.User;
-import com.fbxmtjqj.pushserver.user.model.repository.UserRepository;
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.gson.JsonParseException;
 import lombok.RequiredArgsConstructor;
@@ -31,7 +29,6 @@ import java.util.List;
 @Transactional
 public class FCMService {
     private final FCMRepository fcmRepository;
-    private final UserRepository userRepository;
 
     @Value("${fcm.url}")
     private String apiUrl;
@@ -39,10 +36,8 @@ public class FCMService {
     private String accessToken;
 
     public SendMessageResponse sendMessage(final String userId, final String content) throws IOException {
-        final User user = userRepository.findByUserId(userId)
-                .orElseThrow(() -> new ServerException(ErrorCode.USER_NOT_FOUND));
-        final List<FCM> tokenList = fcmRepository.findByUser(user)
-                .orElseThrow(() -> new ServerException(ErrorCode.FCM_NOT_FOUND));
+        final List<FCM> tokenList = fcmRepository.getFCMListByUserId(userId)
+                .orElseThrow(() -> new ServerException(ErrorCode.NOT_FOUND));
 
         OkHttpClient client = new OkHttpClient();
         int successMessageCount = 0;

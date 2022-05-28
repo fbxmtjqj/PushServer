@@ -43,3 +43,4 @@ out/
 /src/main/resources/application-fcm.yml
 /src/test/resources/application-fcm.yml
 /src/main/resources/firebase/
+/src/main/generated/
