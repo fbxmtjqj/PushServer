@@ -1,7 +1,7 @@
 package com.fbxmtjqj.pushserver.user.controller;
 
 import com.fbxmtjqj.pushserver.user.model.dto.*;
-import com.fbxmtjqj.pushserver.user.model.validation.ValidationGroups;
+import com.fbxmtjqj.pushserver.user.model.validation.ValidationUser;
 import com.fbxmtjqj.pushserver.user.services.UserReadService;
 import com.fbxmtjqj.pushserver.user.services.UserService;
 import lombok.RequiredArgsConstructor;
@@ -32,7 +32,7 @@ public class UserController {
 
     @PostMapping("/api/v1/users")
     public ResponseEntity<AddUserResponse> addUser(
-            @RequestBody @Validated(ValidationGroups.UserAddMarker.class) final UserRequest userRequest) {
+            @RequestBody @Validated(ValidationUser.UserAddMarker.class) final UserRequest userRequest) {
 
         final AddUserResponse userAddResponse = userService.addUser(userRequest.getUserId(), userRequest.getPassword(), userRequest.getSiteNm());
 
@@ -42,9 +42,9 @@ public class UserController {
 
     @PostMapping("/api/v1/signIn")
     public ResponseEntity<SignInResponse> signIn(
-            @RequestBody @Validated(ValidationGroups.SignInMarker.class) final UserRequest userRequest) {
+            @RequestBody @Validated(ValidationUser.SignInMarker.class) final UserRequest userRequest) {
 
-        final SignInResponse signInResponse = userService.signIn(userRequest.getUserId(), userRequest.getPassword());
+        final SignInResponse signInResponse = userService.signIn(userRequest.getUserId(), userRequest.getPassword(), userRequest.getFcmKey());
 
         return ResponseEntity.status(HttpStatus.OK)
                 .body(signInResponse);

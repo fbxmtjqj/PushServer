@@ -1,6 +1,6 @@
 package com.fbxmtjqj.pushserver.user.model.dto;
 
-import com.fbxmtjqj.pushserver.user.model.validation.ValidationGroups;
+import com.fbxmtjqj.pushserver.user.model.validation.ValidationUser;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,14 +14,17 @@ import javax.validation.constraints.NotNull;
 @NoArgsConstructor(force = true)
 public class UserRequest {
 
-    @NotNull(groups = {ValidationGroups.UserAddMarker.class, ValidationGroups.SignInMarker.class})
+    @NotNull(groups = {ValidationUser.UserAddMarker.class, ValidationUser.SignInMarker.class})
     private final String userId;
 
-    @NotNull(groups = {ValidationGroups.UserAddMarker.class, ValidationGroups.SignInMarker.class})
+    @NotNull(groups = {ValidationUser.UserAddMarker.class, ValidationUser.SignInMarker.class})
     private final String password;
 
-    @NotNull(groups = {ValidationGroups.UserAddMarker.class})
+    @NotNull(groups = {ValidationUser.UserAddMarker.class})
     private final String siteNm;
 
     private final String userType;
+
+    @NotNull(groups = {ValidationUser.SignInMarker.class})
+    private final String fcmKey;
 }

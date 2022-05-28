@@ -1,10 +1,12 @@
 package com.fbxmtjqj.pushserver.user.model.entity;
 
 import com.fbxmtjqj.pushserver.common.model.entity.EntityDate;
+import com.fbxmtjqj.pushserver.fcm.model.entity.FCM;
 import com.fbxmtjqj.pushserver.user.model.enums.UserType;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table
@@ -31,4 +33,12 @@ public class User extends EntityDate {
     @ManyToOne
     @JoinColumn(name = "GROUP_ID")
     private Group group;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
+    private List<FCM> fcm;
+
+    public void addFCM(FCM fcm){
+        this.fcm.add(fcm);
+        fcm.setUser(this);
+    }
 }

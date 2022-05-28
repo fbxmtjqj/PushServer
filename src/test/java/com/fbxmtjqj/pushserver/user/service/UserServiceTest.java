@@ -3,6 +3,8 @@ package com.fbxmtjqj.pushserver.user.service;
 import com.fbxmtjqj.pushserver.common.exception.ErrorCode;
 import com.fbxmtjqj.pushserver.common.exception.ServerException;
 import com.fbxmtjqj.pushserver.common.jwt.JwtService;
+import com.fbxmtjqj.pushserver.fcm.model.entity.FCM;
+import com.fbxmtjqj.pushserver.fcm.model.repository.FCMRepository;
 import com.fbxmtjqj.pushserver.user.model.dto.AddUserResponse;
 import com.fbxmtjqj.pushserver.user.model.dto.SignInResponse;
 import com.fbxmtjqj.pushserver.user.model.dto.UpdateUserTypeResponse;
@@ -20,6 +22,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.util.ArrayList;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -35,6 +38,8 @@ public class UserServiceTest {
     private UserRepository userRepository;
     @Mock
     private GroupRepository groupRepository;
+    @Mock
+    private FCMRepository fcmRepository;
     @Mock
     private PasswordEncoder passwordEncoder;
     @Mock
@@ -58,7 +63,7 @@ public class UserServiceTest {
     public void failAddUserUserAlreadyRegister() {
         doReturn(Optional.of(getUser())).when(userRepository).findByUserId("userId");
 
-        final ServerException result = assertThrows(ServerException.class, () -> target.addUser("userId", "password","test"));
+        final ServerException result = assertThrows(ServerException.class, () -> target.addUser("userId", "password", "test"));
 
         assertThat(result.getErrorResult()).isEqualTo(ErrorCode.USER_ALREADY_REGISTER);
     }
@@ -68,8 +73,9 @@ public class UserServiceTest {
     public void successSignIn() {
         doReturn(Optional.of(getUser())).when(userRepository).findByUserId("userId");
         doReturn(true).when(passwordEncoder).matches(anyString(), anyString());
+        doReturn(Optional.of(FCM.builder().key("key").build())).when(fcmRepository).findByKey(anyString());
 
-        final SignInResponse result = target.signIn("userId", "password");
+        final SignInResponse result = target.signIn("userId", "password", "key");
 
         assertThat(result).isNotNull();
     }
@@ -79,7 +85,7 @@ public class UserServiceTest {
     public void failSignInUserNotFound() {
         doReturn(Optional.empty()).when(userRepository).findByUserId("userId");
 
-        final ServerException result = assertThrows(ServerException.class, () -> target.signIn("userId", "password"));
+        final ServerException result = assertThrows(ServerException.class, () -> target.signIn("userId", "password", "key"));
 
         assertThat(result.getErrorResult()).isEqualTo(ErrorCode.USER_NOT_FOUND);
 
@@ -91,7 +97,7 @@ public class UserServiceTest {
     public void failSignInPasswordNotEqual() {
         doReturn(Optional.of(getUser())).when(userRepository).findByUserId("userId");
 
-        final ServerException result = assertThrows(ServerException.class, () -> target.signIn("userId", "ttt"));
+        final ServerException result = assertThrows(ServerException.class, () -> target.signIn("userId", "ttt", "key"));
 
         assertThat(result.getErrorResult()).isEqualTo(ErrorCode.USER_SIGN_IN_FAILED);
 
@@ -139,6 +145,7 @@ public class UserServiceTest {
                 .userId("userId")
                 .password("password")
                 .group(Group.builder().name("test").build())
+                .fcm(new ArrayList<>())
                 .build();
     }
 }

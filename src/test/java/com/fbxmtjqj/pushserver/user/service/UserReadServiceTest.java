@@ -1,6 +1,7 @@
 package com.fbxmtjqj.pushserver.user.service;
 
 import com.fbxmtjqj.pushserver.user.model.dto.GetUsersResponse;
+import com.fbxmtjqj.pushserver.user.model.entity.Group;
 import com.fbxmtjqj.pushserver.user.model.entity.User;
 import com.fbxmtjqj.pushserver.user.model.repository.UserRepository;
 import com.fbxmtjqj.pushserver.user.services.UserReadService;
@@ -11,6 +12,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -28,9 +30,9 @@ public class UserReadServiceTest {
     @DisplayName("유저조회 성공")
     public void successAddUser() {
         doReturn(Arrays.asList(
-                User.builder().build(),
-                User.builder().build(),
-                User.builder().build()
+                User.builder().group(Group.builder().build()).fcm(new ArrayList<>()).build(),
+                User.builder().group(Group.builder().build()).fcm(new ArrayList<>()).build(),
+                User.builder().group(Group.builder().build()).fcm(new ArrayList<>()).build()
         )).when(userRepository).findAll();
 
         final List<GetUsersResponse> result = target.getUsers();

@@ -3,6 +3,8 @@ package com.fbxmtjqj.pushserver.user.services;
 import com.fbxmtjqj.pushserver.common.exception.ErrorCode;
 import com.fbxmtjqj.pushserver.common.exception.ServerException;
 import com.fbxmtjqj.pushserver.common.jwt.JwtService;
+import com.fbxmtjqj.pushserver.fcm.model.entity.FCM;
+import com.fbxmtjqj.pushserver.fcm.model.repository.FCMRepository;
 import com.fbxmtjqj.pushserver.user.model.dto.AddUserResponse;
 import com.fbxmtjqj.pushserver.user.model.dto.SignInResponse;
 import com.fbxmtjqj.pushserver.user.model.dto.UpdateUserTypeResponse;
@@ -23,6 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserService {
     private final UserRepository userRepository;
     private final GroupRepository groupRepository;
+    private final FCMRepository fcmRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
 
@@ -48,7 +51,7 @@ public class UserService {
                 .build();
     }
 
-    public SignInResponse signIn(final String userId, final String password) {
+    public SignInResponse signIn(final String userId, final String password, final String fcmKey) {
         final User user = userRepository.findByUserId(userId)
                 .orElseThrow(() -> new ServerException(ErrorCode.USER_NOT_FOUND));
 
@@ -58,6 +61,10 @@ public class UserService {
 
         final String accessToken = jwtService.createAccessToken(user);
         final String refreshToken = jwtService.createRefreshToken(user);
+
+        final FCM fcm = fcmRepository.findByKey(fcmKey).orElseGet(() -> FCM.builder().key(fcmKey).user(user).build());
+        fcmRepository.save(fcm);
+        user.addFCM(fcm);
 
         return SignInResponse.builder()
                 .accessToken(accessToken)

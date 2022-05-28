@@ -15,6 +15,9 @@ public enum ErrorCode {
     ACCESS_DENIED(HttpStatus.FORBIDDEN,"ACCESS_DENIED"),
     UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "UNAUTHORIZED"),
     UNKNOWN_EXCEPTION(HttpStatus.INTERNAL_SERVER_ERROR, "UNKNOWN_EXCEPTION"),
+    FCM_NOT_FOUND(HttpStatus.BAD_REQUEST,"FCM Key Not Found"),
+
+    TEST_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "TEST_ERROR")
     ;
 
     private final HttpStatus httpStatus;

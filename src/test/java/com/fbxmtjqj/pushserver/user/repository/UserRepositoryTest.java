@@ -2,6 +2,8 @@ package com.fbxmtjqj.pushserver.user.repository;
 
 import com.fbxmtjqj.pushserver.common.exception.ErrorCode;
 import com.fbxmtjqj.pushserver.common.exception.ServerException;
+import com.fbxmtjqj.pushserver.fcm.model.entity.FCM;
+import com.fbxmtjqj.pushserver.fcm.model.repository.FCMRepository;
 import com.fbxmtjqj.pushserver.user.model.entity.User;
 import com.fbxmtjqj.pushserver.user.model.repository.UserRepository;
 import org.junit.jupiter.api.DisplayName;
@@ -11,6 +13,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -18,17 +21,23 @@ import static org.assertj.core.api.Assertions.assertThat;
 @Transactional
 public class UserRepositoryTest {
     @Autowired
+    private FCMRepository fcmRepository;
+    @Autowired
     private UserRepository userRepository;
 
     @Test
     @DisplayName("유저등록")
     public void addUser() {
-        final User user = getUser();
         final LocalDateTime now = LocalDateTime.now().withNano(0);
+        final FCM fcm = FCM.builder().key("key").build();
+        fcmRepository.save(fcm);
+        final User user = getUser(fcm);
 
         final User result = userRepository.save(user);
 
         assertThat(result.getId()).isNotNull();
+        assertThat(result.getFcm()).isNotNull();
+        assertThat(result.getFcm().get(0).getKey()).isEqualTo("key");
         assertThat(result.getUserId()).isEqualTo("userId");
         assertThat(result.getPassword()).isEqualTo("password");
         assertThat(result.getCreatedDate().withNano(0)).isEqualTo(now);
@@ -42,7 +51,7 @@ public class UserRepositoryTest {
 
         userRepository.save(user);
         final User findResult = userRepository.findByUserId("userId")
-                .orElseThrow(() -> new ServerException(ErrorCode.USER_NOT_FOUND));
+                .orElseThrow(() -> new ServerException(ErrorCode.TEST_ERROR));
 
         assertThat(findResult).isNotNull();
         assertThat(findResult.getUserId()).isEqualTo("userId");
@@ -54,6 +63,18 @@ public class UserRepositoryTest {
         return User.builder()
                 .userId("userId")
                 .password("password")
+                .fcm(new ArrayList<>())
                 .build();
+    }
+
+    private User getUser(FCM fcm) {
+        final User user = User.builder()
+                .userId("userId")
+                .password("password")
+                .fcm(new ArrayList<>())
+                .build();
+        user.addFCM(fcm);
+
+        return user;
     }
 }

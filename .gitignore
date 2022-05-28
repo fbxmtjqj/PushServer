@@ -40,3 +40,6 @@ out/
 ### user add ###
 /src/test/resources/application-secret.yml
 /src/main/resources/application-secret.yml
+/src/main/resources/application-fcm.yml
+/src/test/resources/application-fcm.yml
+/src/main/resources/firebase/

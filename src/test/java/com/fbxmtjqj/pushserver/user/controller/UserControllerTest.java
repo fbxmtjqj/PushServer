@@ -53,7 +53,7 @@ public class UserControllerTest {
 
         final ResultActions resultActions = mockMvc.perform(
                 MockMvcRequestBuilders.post(url)
-                        .content(gson.toJson(getUser("test", "test", "test")))
+                        .content(gson.toJson(getUser("test", "test", "test", null, null)))
                         .contentType(MediaType.APPLICATION_JSON)
         );
 
@@ -68,7 +68,7 @@ public class UserControllerTest {
 
         final ResultActions resultActions = mockMvc.perform(
                 MockMvcRequestBuilders.post(url)
-                        .content(gson.toJson(getUser(userId, password, siteNm)))
+                        .content(gson.toJson(getUser(userId, password, siteNm, null, null)))
                         .contentType(MediaType.APPLICATION_JSON)
         );
 
@@ -82,7 +82,7 @@ public class UserControllerTest {
 
         final ResultActions resultActions = mockMvc.perform(
                 MockMvcRequestBuilders.post(url)
-                        .content(gson.toJson(getUser("test", "test")))
+                        .content(gson.toJson(getUser("test", "test", null, null, "key")))
                         .contentType(MediaType.APPLICATION_JSON)
         );
 
@@ -92,12 +92,12 @@ public class UserControllerTest {
     @ParameterizedTest
     @MethodSource("failSignInParameter")
     @DisplayName("유저SignIn 실패 - 잘못된 파라미터")
-    public void failedSignIn(final String userId, final String password) throws Exception {
+    public void failedSignIn(final String userId, final String password, final String key) throws Exception {
         final String url = "/api/v1/signIn";
 
         final ResultActions resultActions = mockMvc.perform(
                 MockMvcRequestBuilders.post(url)
-                        .content(gson.toJson(getUser(userId, password)))
+                        .content(gson.toJson(getUser(userId, password, null, null, key)))
                         .contentType(MediaType.APPLICATION_JSON)
         );
 
@@ -111,7 +111,7 @@ public class UserControllerTest {
 
         final ResultActions resultActions = mockMvc.perform(
                 MockMvcRequestBuilders.post(url)
-                        .content(gson.toJson(getUser("test", null, null, "USER")))
+                        .content(gson.toJson(getUser("test", null, null, "USER", null)))
                         .contentType(MediaType.APPLICATION_JSON)
         );
 
@@ -138,20 +138,13 @@ public class UserControllerTest {
         resultActions.andExpect(status().isOk());
     }
 
-    private UserRequest getUser(final String userId, final String password) {
-        return getUser(userId, password, null, null);
-    }
-
-    private UserRequest getUser(final String userId, final String password, final String siteNm) {
-        return getUser(userId, password, siteNm, null);
-    }
-
-    private UserRequest getUser(final String userId, final String password, final String siteNm, final String userType) {
+    private UserRequest getUser(final String userId, final String password, final String siteNm, final String userType, final String key) {
         return UserRequest.builder()
                 .userId(userId)
                 .password(password)
                 .siteNm(siteNm)
                 .userType(userType)
+                .fcmKey(key)
                 .build();
     }
 
@@ -165,8 +158,9 @@ public class UserControllerTest {
 
     private static Stream<Arguments> failSignInParameter() {
         return Stream.of(
-                Arguments.of(null, "test"),
-                Arguments.of("test", null)
+                Arguments.of(null, "test", "test"),
+                Arguments.of("test", null, "test"),
+                Arguments.of("test", "test", null)
         );
     }
 }
