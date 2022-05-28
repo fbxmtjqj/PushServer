@@ -73,9 +73,9 @@ public class UserServiceTest {
     public void successSignIn() {
         doReturn(Optional.of(getUser())).when(userRepository).findByUserId("userId");
         doReturn(true).when(passwordEncoder).matches(anyString(), anyString());
-        doReturn(Optional.of(FCM.builder().key("key").build())).when(fcmRepository).findByKey(anyString());
+        doReturn(Optional.of(FCM.builder().token("token").build())).when(fcmRepository).findByToken(anyString());
 
-        final SignInResponse result = target.signIn("userId", "password", "key");
+        final SignInResponse result = target.signIn("userId", "password", "token");
 
         assertThat(result).isNotNull();
     }

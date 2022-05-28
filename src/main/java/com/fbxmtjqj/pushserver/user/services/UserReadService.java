@@ -27,7 +27,7 @@ public class UserReadService {
                         .userId(v.getUserId())
                         .userType(v.getUserType())
                         .siteNm(v.getGroup().getName())
-                        .key(v.getFcm().stream().map(FCM::getKey).collect(Collectors.toList()))
+                        .key(v.getFcm().stream().map(FCM::getToken).collect(Collectors.toList()))
                         .build())
                 .collect(Collectors.toList());
     }

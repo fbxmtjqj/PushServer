@@ -19,7 +19,7 @@ public class FCM {
     private Long id;
 
     @Column(nullable = false)
-    private String key;
+    private String token;
 
     @Setter
     @ManyToOne

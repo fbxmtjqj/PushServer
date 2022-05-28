@@ -1,5 +1,6 @@
 package com.fbxmtjqj.pushserver.user.repository;
 
+import com.fbxmtjqj.pushserver.common.TestRepositoryConfig;
 import com.fbxmtjqj.pushserver.common.exception.ErrorCode;
 import com.fbxmtjqj.pushserver.common.exception.ServerException;
 import com.fbxmtjqj.pushserver.fcm.model.entity.FCM;
@@ -10,6 +11,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
@@ -19,6 +21,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
 @Transactional
+@Import(TestRepositoryConfig.class)
 public class UserRepositoryTest {
     @Autowired
     private FCMRepository fcmRepository;
@@ -29,7 +32,7 @@ public class UserRepositoryTest {
     @DisplayName("유저등록")
     public void addUser() {
         final LocalDateTime now = LocalDateTime.now().withNano(0);
-        final FCM fcm = FCM.builder().key("key").build();
+        final FCM fcm = FCM.builder().token("token").build();
         fcmRepository.save(fcm);
         final User user = getUser(fcm);
 
@@ -37,7 +40,7 @@ public class UserRepositoryTest {
 
         assertThat(result.getId()).isNotNull();
         assertThat(result.getFcm()).isNotNull();
-        assertThat(result.getFcm().get(0).getKey()).isEqualTo("key");
+        assertThat(result.getFcm().get(0).getToken()).isEqualTo("token");
         assertThat(result.getUserId()).isEqualTo("userId");
         assertThat(result.getPassword()).isEqualTo("password");
         assertThat(result.getCreatedDate().withNano(0)).isEqualTo(now);

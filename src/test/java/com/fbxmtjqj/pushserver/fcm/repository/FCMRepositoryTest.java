@@ -28,20 +28,20 @@ public class FCMRepositoryTest {
     @Autowired
     private UserRepository userRepository;
 
-    private final String key = "key";
+    private final String token = "token";
     private final String userId = "userId";
 
     @Test
     @DisplayName("Key로 조회")
     public void findByKey() {
-        final FCM fcm = FCM.builder().key(key).build();
+        final FCM fcm = FCM.builder().token(token).build();
         fcmRepository.save(fcm);
 
-        final FCM result = fcmRepository.findByKey(key)
+        final FCM result = fcmRepository.findByToken(token)
                 .orElseThrow(() -> new ServerException(ErrorCode.TEST_ERROR));
 
         assertThat(result).isNotNull();
-        assertThat(result.getKey()).isEqualTo(key);
+        assertThat(result.getToken()).isEqualTo(token);
     }
 
     @Test
@@ -57,7 +57,7 @@ public class FCMRepositoryTest {
 
         assertThat(result).isNotNull();
         assertThat(result.size()).isEqualTo(1);
-        assertThat(result.get(0).getKey()).isEqualTo(key);
+        assertThat(result.get(0).getToken()).isEqualTo(token);
         assertThat(result.get(0).getUser().getUserId()).isEqualTo(userId);
     }
 
@@ -69,7 +69,7 @@ public class FCMRepositoryTest {
         userRepository.save(user);
         fcmRepository.save(fcm);
 
-        fcmRepository.deleteByKey(key);
+        fcmRepository.deleteByToken(token);
 
         final List<FCM> result = fcmRepository.getFCMListByUserId(userId)
                 .orElseThrow(() -> new ServerException(ErrorCode.TEST_ERROR));
@@ -83,6 +83,6 @@ public class FCMRepositoryTest {
     }
 
     private FCM getFCM(final User user) {
-        return FCM.builder().key(key).user(user).build();
+        return FCM.builder().token(token).user(user).build();
     }
 }

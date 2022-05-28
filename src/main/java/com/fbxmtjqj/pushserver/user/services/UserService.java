@@ -51,7 +51,7 @@ public class UserService {
                 .build();
     }
 
-    public SignInResponse signIn(final String userId, final String password, final String fcmKey) {
+    public SignInResponse signIn(final String userId, final String password, final String fcmToken) {
         final User user = userRepository.findByUserId(userId)
                 .orElseThrow(() -> new ServerException(ErrorCode.USER_NOT_FOUND));
 
@@ -62,7 +62,7 @@ public class UserService {
         final String accessToken = jwtService.createAccessToken(user);
         final String refreshToken = jwtService.createRefreshToken(user);
 
-        final FCM fcm = fcmRepository.findByKey(fcmKey).orElseGet(() -> FCM.builder().key(fcmKey).user(user).build());
+        final FCM fcm = fcmRepository.findByToken(fcmToken).orElseGet(() -> FCM.builder().token(fcmToken).user(user).build());
         fcmRepository.save(fcm);
         user.addFCM(fcm);
 

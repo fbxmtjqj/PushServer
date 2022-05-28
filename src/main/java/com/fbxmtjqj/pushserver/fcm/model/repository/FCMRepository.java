@@ -7,7 +7,7 @@ import java.util.Optional;
 
 public interface FCMRepository extends JpaRepository<FCM, Long>, FCMRepositoryCustom {
 
-    Optional<FCM> findByKey(final String name);
+    Optional<FCM> findByToken(final String name);
 
-    void deleteByKey(final String key);
+    void deleteByToken(final String key);
 }
