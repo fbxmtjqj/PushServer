@@ -1,6 +1,6 @@
 package com.fbxmtjqj.pushserver.common.config;
 
-import com.fbxmtjqj.pushserver.common.exception.handler.SecurityHandler;
+import com.fbxmtjqj.pushserver.common.SecurityHandler;
 import com.fbxmtjqj.pushserver.common.jwt.JwtFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpMethod;

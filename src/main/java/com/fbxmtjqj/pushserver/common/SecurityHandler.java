@@ -1,4 +1,4 @@
-package com.fbxmtjqj.pushserver.common.exception.handler;
+package com.fbxmtjqj.pushserver.common;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
@@ -13,7 +13,6 @@ import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.util.StringUtils;
 
-import javax.servlet.RequestDispatcher;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -66,8 +65,8 @@ public class SecurityHandler implements AccessDeniedHandler, AuthenticationEntry
     }
 
     private String getRequestPath(HttpServletRequest request) {
-        String servletPath = (String) request.getAttribute((RequestDispatcher.FORWARD_SERVLET_PATH));
-        String query = (String) request.getAttribute((RequestDispatcher.FORWARD_QUERY_STRING));
+        String servletPath = request.getRequestURI();
+        String query = request.getQueryString();
         if (StringUtils.hasText(query)) {
             return servletPath + "?" + query;
         }
