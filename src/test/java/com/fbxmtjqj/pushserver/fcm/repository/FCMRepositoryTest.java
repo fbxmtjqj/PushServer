@@ -5,7 +5,9 @@ import com.fbxmtjqj.pushserver.common.exception.ErrorCode;
 import com.fbxmtjqj.pushserver.common.exception.ServerException;
 import com.fbxmtjqj.pushserver.fcm.model.entity.FCM;
 import com.fbxmtjqj.pushserver.fcm.model.repository.FCMRepository;
+import com.fbxmtjqj.pushserver.user.model.entity.Group;
 import com.fbxmtjqj.pushserver.user.model.entity.User;
+import com.fbxmtjqj.pushserver.user.model.repository.GroupRepository;
 import com.fbxmtjqj.pushserver.user.model.repository.UserRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -27,6 +29,8 @@ public class FCMRepositoryTest {
     private FCMRepository fcmRepository;
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private GroupRepository groupRepository;
 
     private final String token = "token";
     private final String userId = "userId";
@@ -79,7 +83,9 @@ public class FCMRepositoryTest {
     }
 
     private User getUser() {
-        return User.builder().userId(userId).password("password").build();
+        Group group = Group.builder().name("group").build();
+        groupRepository.save(group);
+        return User.builder().userId(userId).password("password").group(group).build();
     }
 
     private FCM getFCM(final User user) {
