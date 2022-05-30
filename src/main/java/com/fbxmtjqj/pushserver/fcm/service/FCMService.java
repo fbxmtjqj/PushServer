@@ -36,7 +36,7 @@ public class FCMService {
                 successMessageCount++;
             } else{
                 failMessageCount++;
-                if(responseHttpStatusCode == 401) {
+                if(responseHttpStatusCode == 400 || responseHttpStatusCode == 404) {
                     fcmRepository.deleteByToken(fcmToken);
                 }
             }
