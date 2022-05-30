@@ -6,6 +6,7 @@ import com.fbxmtjqj.pushserver.common.exception.ServerException;
 import com.fbxmtjqj.pushserver.fcm.model.dto.SendMessageResponse;
 import com.fbxmtjqj.pushserver.fcm.model.entity.FCM;
 import com.fbxmtjqj.pushserver.fcm.model.repository.FCMRepository;
+import com.fbxmtjqj.pushserver.fcm.model.repository.MessageRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -27,6 +28,8 @@ public class FCMServiceTest {
     private FCMService target;
     @Mock
     private FCMRepository fcmRepository;
+    @Mock
+    private MessageRepository messageRepository;
     @Mock
     private FirebaseService fireBaseService;
 
@@ -51,7 +54,7 @@ public class FCMServiceTest {
         List<FCM> fcmList = new ArrayList<>();
         fcmList.add(FCM.builder().token("token").build());
         doReturn(Optional.of(fcmList)).when(fcmRepository).getFCMListByUserId("userId");
-        doReturn(401).when(fireBaseService).sendMessage("token", "content");
+        doReturn(400).when(fireBaseService).sendMessage("token", "content");
 
         final SendMessageResponse result = target.sendMessage("userId", "content");
 

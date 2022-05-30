@@ -5,7 +5,9 @@ import com.fbxmtjqj.pushserver.common.exception.ErrorCode;
 import com.fbxmtjqj.pushserver.common.exception.ServerException;
 import com.fbxmtjqj.pushserver.fcm.model.dto.SendMessageResponse;
 import com.fbxmtjqj.pushserver.fcm.model.entity.FCM;
+import com.fbxmtjqj.pushserver.fcm.model.entity.Message;
 import com.fbxmtjqj.pushserver.fcm.model.repository.FCMRepository;
+import com.fbxmtjqj.pushserver.fcm.model.repository.MessageRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
@@ -20,6 +22,8 @@ import java.util.List;
 @Transactional
 public class FCMService {
     private final FCMRepository fcmRepository;
+    private final MessageRepository messageRepository;
+
     private final FirebaseService fireBaseService;
 
     public SendMessageResponse sendMessage(final String userId, final String content) throws JsonProcessingException {
@@ -32,15 +36,22 @@ public class FCMService {
             final String fcmToken = token.getToken();
             final int responseHttpStatusCode = fireBaseService.sendMessage(fcmToken, content);
 
-            if(HttpStatus.valueOf(responseHttpStatusCode).is2xxSuccessful()) {
+            if (HttpStatus.valueOf(responseHttpStatusCode).is2xxSuccessful()) {
                 successMessageCount++;
-            } else{
+            } else {
                 failMessageCount++;
-                if(responseHttpStatusCode == 400 || responseHttpStatusCode == 404) {
+                if (responseHttpStatusCode == 400 || responseHttpStatusCode == 404) {
                     fcmRepository.deleteByToken(fcmToken);
                 }
             }
         }
+
+        messageRepository.save(Message.builder()
+                                    .user(tokenList.get(0).getUser())
+                                    .content(content)
+                                    .successCount(successMessageCount)
+                                    .failCount(failMessageCount)
+                                    .build());
 
         return SendMessageResponse.builder()
                 .successCount(successMessageCount)
