@@ -3,7 +3,6 @@ package com.fbxmtjqj.pushserver.user.repository;
 import com.fbxmtjqj.pushserver.common.TestRepositoryConfig;
 import com.fbxmtjqj.pushserver.common.exception.ErrorCode;
 import com.fbxmtjqj.pushserver.common.exception.ServerException;
-import com.fbxmtjqj.pushserver.fcm.model.entity.FCM;
 import com.fbxmtjqj.pushserver.fcm.model.repository.FCMRepository;
 import com.fbxmtjqj.pushserver.user.model.entity.User;
 import com.fbxmtjqj.pushserver.user.model.repository.UserRepository;
@@ -15,7 +14,6 @@ import org.springframework.context.annotation.Import;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -32,15 +30,11 @@ public class UserRepositoryTest {
     @DisplayName("유저등록")
     public void addUser() {
         final LocalDateTime now = LocalDateTime.now().withNano(0);
-        final FCM fcm = FCM.builder().token("token").build();
-        fcmRepository.save(fcm);
-        final User user = getUser(fcm);
+        final User user = getUser();
 
         final User result = userRepository.save(user);
 
         assertThat(result.getId()).isNotNull();
-        assertThat(result.getFcm()).isNotNull();
-        assertThat(result.getFcm().get(0).getToken()).isEqualTo("token");
         assertThat(result.getUserId()).isEqualTo("userId");
         assertThat(result.getPassword()).isEqualTo("password");
         assertThat(result.getCreatedDate().withNano(0)).isEqualTo(now);
@@ -66,18 +60,6 @@ public class UserRepositoryTest {
         return User.builder()
                 .userId("userId")
                 .password("password")
-                .fcm(new ArrayList<>())
                 .build();
-    }
-
-    private User getUser(FCM fcm) {
-        final User user = User.builder()
-                .userId("userId")
-                .password("password")
-                .fcm(new ArrayList<>())
-                .build();
-        user.addFCM(fcm);
-
-        return user;
     }
 }

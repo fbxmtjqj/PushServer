@@ -22,7 +22,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import java.util.ArrayList;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -145,7 +144,6 @@ public class UserServiceTest {
                 .userId("userId")
                 .password("password")
                 .group(Group.builder().name("test").build())
-                .fcm(new ArrayList<>())
                 .build();
     }
 }

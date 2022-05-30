@@ -64,7 +64,6 @@ public class UserService {
 
         final FCM fcm = fcmRepository.findByToken(fcmToken).orElseGet(() -> FCM.builder().token(fcmToken).user(user).build());
         fcmRepository.save(fcm);
-        user.addFCM(fcm);
 
         return SignInResponse.builder()
                 .accessToken(accessToken)

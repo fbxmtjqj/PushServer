@@ -12,7 +12,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -30,9 +29,9 @@ public class UserReadServiceTest {
     @DisplayName("유저조회 성공")
     public void successAddUser() {
         doReturn(Arrays.asList(
-                User.builder().group(Group.builder().build()).fcm(new ArrayList<>()).build(),
-                User.builder().group(Group.builder().build()).fcm(new ArrayList<>()).build(),
-                User.builder().group(Group.builder().build()).fcm(new ArrayList<>()).build()
+                User.builder().group(Group.builder().build()).build(),
+                User.builder().group(Group.builder().build()).build(),
+                User.builder().group(Group.builder().build()).build()
         )).when(userRepository).findAll();
 
         final List<GetUsersResponse> result = target.getUsers();
