@@ -36,6 +36,19 @@ public class FCMRepositoryTest {
     private final String userId = "userId";
 
     @Test
+    @DisplayName("fcm 저장")
+    public void saveFCM() {
+        final User user = getUser();
+        final FCM fcm = getFCM(user);
+
+        final FCM result = fcmRepository.save(fcm);
+
+        assertThat(result).isNotNull();
+        assertThat(result.getToken()).isEqualTo(token);
+        assertThat(result.getUser().getUserId()).isEqualTo(userId);
+    }
+
+    @Test
     @DisplayName("Key로 조회")
     public void findByKey() {
         final FCM fcm = FCM.builder().token(token).build();

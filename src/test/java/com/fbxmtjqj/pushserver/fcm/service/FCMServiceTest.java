@@ -7,6 +7,8 @@ import com.fbxmtjqj.pushserver.fcm.model.dto.SendMessageResponse;
 import com.fbxmtjqj.pushserver.fcm.model.entity.FCM;
 import com.fbxmtjqj.pushserver.fcm.model.repository.FCMRepository;
 import com.fbxmtjqj.pushserver.fcm.model.repository.MessageRepository;
+import com.fbxmtjqj.pushserver.user.model.entity.User;
+import com.fbxmtjqj.pushserver.user.model.repository.UserRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -30,6 +32,8 @@ public class FCMServiceTest {
     private FCMRepository fcmRepository;
     @Mock
     private MessageRepository messageRepository;
+    @Mock
+    private UserRepository userRepository;
     @Mock
     private FirebaseService fireBaseService;
 
@@ -106,4 +110,25 @@ public class FCMServiceTest {
 
         assertThat(result.getErrorResult()).isEqualTo(ErrorCode.NOT_FOUND);
     }
+
+    @Test
+    @DisplayName("토큰추가 성공")
+    public void successAddToken() {
+        doReturn(Optional.of(User.builder().userId("userId").build())).when(userRepository).findByUserId("userId");
+
+        target.addToken("userId","fcmToken");
+
+        verify(fcmRepository, times(1)).save(any(FCM.class));
+    }
+
+    @Test
+    @DisplayName("토큰추가 실패 - 유저 조회 실패")
+    public void failAddToken() {
+        doReturn(Optional.empty()).when(userRepository).findByUserId("userId");
+
+        final ServerException result = assertThrows(ServerException.class, () -> target.addToken("userId","fcmToken"));
+
+        assertThat(result.getErrorResult()).isEqualTo(ErrorCode.USER_NOT_FOUND);
+    }
+
 }

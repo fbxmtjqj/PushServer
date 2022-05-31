@@ -8,20 +8,21 @@ import com.fbxmtjqj.pushserver.fcm.model.entity.FCM;
 import com.fbxmtjqj.pushserver.fcm.model.entity.Message;
 import com.fbxmtjqj.pushserver.fcm.model.repository.FCMRepository;
 import com.fbxmtjqj.pushserver.fcm.model.repository.MessageRepository;
+import com.fbxmtjqj.pushserver.user.model.entity.User;
+import com.fbxmtjqj.pushserver.user.model.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-@Log4j2
 @RequiredArgsConstructor
 @Service
 @Transactional
 public class FCMService {
     private final FCMRepository fcmRepository;
+    private final UserRepository userRepository;
     private final MessageRepository messageRepository;
 
     private final FirebaseService fireBaseService;
@@ -57,5 +58,15 @@ public class FCMService {
                 .successCount(successMessageCount)
                 .failCount(failMessageCount)
                 .build();
+    }
+
+    public void addToken(final String userId, final String fcmToken) {
+        User user = userRepository.findByUserId(userId)
+                .orElseThrow(()-> new ServerException(ErrorCode.USER_NOT_FOUND));
+
+        fcmRepository.save(FCM.builder()
+                .user(user)
+                .token(fcmToken)
+                .build());
     }
 }

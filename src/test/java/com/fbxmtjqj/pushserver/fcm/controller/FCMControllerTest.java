@@ -1,6 +1,7 @@
 package com.fbxmtjqj.pushserver.fcm.controller;
 
-import com.fbxmtjqj.pushserver.fcm.model.dto.FCMRequest;
+import com.fbxmtjqj.pushserver.fcm.model.dto.AddTokenRequest;
+import com.fbxmtjqj.pushserver.fcm.model.dto.SendMessageRequest;
 import com.fbxmtjqj.pushserver.fcm.service.FCMService;
 import com.google.gson.Gson;
 import org.junit.jupiter.api.BeforeEach;
@@ -47,7 +48,7 @@ public class FCMControllerTest {
 
         final ResultActions resultActions = mockMvc.perform(
                 MockMvcRequestBuilders.post(url)
-                        .content(gson.toJson(FCMRequest.builder().userId("userId").content("content").build()))
+                        .content(gson.toJson(SendMessageRequest.builder().userId("userId").content("content").build()))
                         .contentType(MediaType.APPLICATION_JSON)
         );
 
@@ -62,7 +63,36 @@ public class FCMControllerTest {
 
         final ResultActions resultActions = mockMvc.perform(
                 MockMvcRequestBuilders.post(url)
-                        .content(gson.toJson(FCMRequest.builder().userId(userId).content(content).build()))
+                        .content(gson.toJson(SendMessageRequest.builder().userId(userId).content(content).build()))
+                        .contentType(MediaType.APPLICATION_JSON)
+        );
+
+        resultActions.andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @DisplayName("AddToken 성공")
+    public void successAddToken() throws Exception {
+        final String url = "/api/v1/token";
+
+        final ResultActions resultActions = mockMvc.perform(
+                MockMvcRequestBuilders.post(url)
+                        .content(gson.toJson(AddTokenRequest.builder().userId("userId").token("token").build()))
+                        .contentType(MediaType.APPLICATION_JSON)
+        );
+
+        resultActions.andExpect(status().isOk());
+    }
+
+    @ParameterizedTest
+    @MethodSource("failAddTokenParameter")
+    @DisplayName("AddToken 실패 - 잘못된 파라미터")
+    public void failAddToken(final String userId, final String token) throws Exception {
+        final String url = "/api/v1/send";
+
+        final ResultActions resultActions = mockMvc.perform(
+                MockMvcRequestBuilders.post(url)
+                        .content(gson.toJson(AddTokenRequest.builder().userId(userId).token(token).build()))
                         .contentType(MediaType.APPLICATION_JSON)
         );
 
@@ -70,6 +100,13 @@ public class FCMControllerTest {
     }
 
     private static Stream<Arguments> failSendMessageParameter() {
+        return Stream.of(
+                Arguments.of(null, "test"),
+                Arguments.of("test", null)
+        );
+    }
+
+    private static Stream<Arguments> failAddTokenParameter() {
         return Stream.of(
                 Arguments.of(null, "test"),
                 Arguments.of("test", null)

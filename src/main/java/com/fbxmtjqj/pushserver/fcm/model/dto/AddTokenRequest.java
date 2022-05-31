@@ -1,6 +1,5 @@
 package com.fbxmtjqj.pushserver.fcm.model.dto;
 
-import com.fbxmtjqj.pushserver.fcm.model.validation.ValidationFCM;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,11 +11,11 @@ import javax.validation.constraints.NotNull;
 @Builder
 @RequiredArgsConstructor
 @NoArgsConstructor(force = true)
-public class FCMRequest {
+public class AddTokenRequest {
 
-    @NotNull(groups = {ValidationFCM.SendMessageMarker.class})
+    @NotNull
     private final String userId;
 
-    @NotNull(groups = {ValidationFCM.SendMessageMarker.class})
-    private final String content;
+    @NotNull
+    private final String token;
 }
