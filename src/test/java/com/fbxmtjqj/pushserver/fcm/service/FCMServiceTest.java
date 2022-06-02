@@ -7,7 +7,6 @@ import com.fbxmtjqj.pushserver.fcm.model.dto.SendMessageResponse;
 import com.fbxmtjqj.pushserver.fcm.model.entity.FCM;
 import com.fbxmtjqj.pushserver.fcm.model.repository.FCMRepository;
 import com.fbxmtjqj.pushserver.fcm.model.repository.MessageRepository;
-import com.fbxmtjqj.pushserver.user.model.entity.User;
 import com.fbxmtjqj.pushserver.user.model.repository.UserRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -20,6 +19,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static com.fbxmtjqj.pushserver.common.dto.FCMDTO.getFCM;
+import static com.fbxmtjqj.pushserver.common.dto.UserDTO.getUser;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
@@ -41,9 +42,9 @@ public class FCMServiceTest {
     @DisplayName("메세지전송 성공 - HttpStatus200")
     public void successSendMessageHttpStatus200() throws JsonProcessingException {
         List<FCM> fcmList = new ArrayList<>();
-        fcmList.add(FCM.builder().token("token").build());
+        fcmList.add(getFCM());
         doReturn(Optional.of(fcmList)).when(fcmRepository).getFCMListByUserId("userId");
-        doReturn(200).when(fireBaseService).sendMessage("token", "content");
+        doReturn(200).when(fireBaseService).sendMessage("fcmToken", "content");
 
         final SendMessageResponse result = target.sendMessage("userId", "content");
 
@@ -56,9 +57,9 @@ public class FCMServiceTest {
     @DisplayName("메세지전송 성공 - HttpStatus401")
     public void successSendMessageHttpStatus401() throws JsonProcessingException {
         List<FCM> fcmList = new ArrayList<>();
-        fcmList.add(FCM.builder().token("token").build());
+        fcmList.add(getFCM());
         doReturn(Optional.of(fcmList)).when(fcmRepository).getFCMListByUserId("userId");
-        doReturn(400).when(fireBaseService).sendMessage("token", "content");
+        doReturn(400).when(fireBaseService).sendMessage("fcmToken", "content");
 
         final SendMessageResponse result = target.sendMessage("userId", "content");
 
@@ -66,16 +67,16 @@ public class FCMServiceTest {
         assertThat(result.getSuccessCount()).isEqualTo(0);
         assertThat(result.getFailCount()).isEqualTo(1);
 
-        verify(fcmRepository, times(1)).deleteByToken("token");
+        verify(fcmRepository, times(1)).deleteByToken("fcmToken");
     }
 
     @Test
     @DisplayName("메세지전송 성공 - HttpStatus404")
     public void successSendMessageHttpStatus404() throws JsonProcessingException {
         List<FCM> fcmList = new ArrayList<>();
-        fcmList.add(FCM.builder().token("token").build());
+        fcmList.add(getFCM());
         doReturn(Optional.of(fcmList)).when(fcmRepository).getFCMListByUserId("userId");
-        doReturn(404).when(fireBaseService).sendMessage("token", "content");
+        doReturn(404).when(fireBaseService).sendMessage("fcmToken", "content");
 
         final SendMessageResponse result = target.sendMessage("userId", "content");
 
@@ -88,11 +89,11 @@ public class FCMServiceTest {
     @DisplayName("메세지전송 성공 - HttpStatusMix")
     public void successSendMessageHttpStatusMix() throws JsonProcessingException {
         List<FCM> fcmList = new ArrayList<>();
-        fcmList.add(FCM.builder().token("token1").build());
-        fcmList.add(FCM.builder().token("token2").build());
+        fcmList.add(getFCM("fcmToken1"));
+        fcmList.add(getFCM("fcmToken2"));
         doReturn(Optional.of(fcmList)).when(fcmRepository).getFCMListByUserId("userId");
-        doReturn(200).when(fireBaseService).sendMessage("token1", "content");
-        doReturn(404).when(fireBaseService).sendMessage("token2", "content");
+        doReturn(200).when(fireBaseService).sendMessage("fcmToken1", "content");
+        doReturn(404).when(fireBaseService).sendMessage("fcmToken2", "content");
 
         final SendMessageResponse result = target.sendMessage("userId", "content");
 
@@ -114,9 +115,9 @@ public class FCMServiceTest {
     @Test
     @DisplayName("토큰추가 성공")
     public void successAddToken() {
-        doReturn(Optional.of(User.builder().userId("userId").build())).when(userRepository).findByUserId("userId");
+        doReturn(Optional.of(getUser())).when(userRepository).findByUserId("userId");
 
-        target.addToken("userId","fcmToken");
+        target.addToken("userId", "fcmToken");
 
         verify(fcmRepository, times(1)).save(any(FCM.class));
     }
@@ -126,7 +127,7 @@ public class FCMServiceTest {
     public void failAddToken() {
         doReturn(Optional.empty()).when(userRepository).findByUserId("userId");
 
-        final ServerException result = assertThrows(ServerException.class, () -> target.addToken("userId","fcmToken"));
+        final ServerException result = assertThrows(ServerException.class, () -> target.addToken("userId", "fcmToken"));
 
         assertThat(result.getErrorResult()).isEqualTo(ErrorCode.USER_NOT_FOUND);
     }

@@ -16,6 +16,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 
+import static com.fbxmtjqj.pushserver.common.dto.GroupDTO.getGroup;
+import static com.fbxmtjqj.pushserver.common.dto.UserDTO.getUser;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
@@ -31,7 +33,9 @@ public class UserRepositoryTest {
     @DisplayName("유저등록")
     public void userSave() {
         final LocalDateTime now = LocalDateTime.now().withNano(0);
-        final User user = getUser();
+        final Group group = getGroup();
+        groupRepository.save(group);
+        final User user = getUser(group);
 
         final User result = userRepository.save(user);
 
@@ -61,7 +65,9 @@ public class UserRepositoryTest {
     @Test
     @DisplayName("유저조회 - queryDsl")
     public void getUserByUserId() {
-        final User user = getUser();
+        final Group group = getGroup();
+        groupRepository.save(group);
+        final User user = getUser(group);
 
         userRepository.save(user);
         final User findResult = userRepository.getUserByUserId("userId")
@@ -72,15 +78,5 @@ public class UserRepositoryTest {
         assertThat(findResult.getPassword()).isEqualTo("password");
         assertThat(findResult.getGroup().getName()).isEqualTo("group");
         assertThat(findResult.getUserType()).isNull();
-    }
-
-    private User getUser() {
-        Group group = Group.builder().name("group").build();
-        groupRepository.save(group);
-        return User.builder()
-                .userId("userId")
-                .password("password")
-                .group(group)
-                .build();
     }
 }

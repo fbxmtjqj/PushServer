@@ -21,6 +21,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Optional;
 
+import static com.fbxmtjqj.pushserver.common.dto.GroupDTO.getGroup;
+import static com.fbxmtjqj.pushserver.common.dto.UserDTO.getUser;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
@@ -44,9 +46,9 @@ public class UserServiceTest {
     @Test
     @DisplayName("유저추가 성공")
     public void successAddUser() {
-        doReturn(getUser()).when(userRepository).save(any(User.class));
+        doReturn(getUser(getGroup())).when(userRepository).save(any(User.class));
 
-        target.addUser("userId", "password", "test");
+        target.addUser("userId", "password", "group");
 
         verify(userRepository, times(1)).save(any(User.class));
         verify(groupRepository, times(1)).save(any(Group.class));
@@ -57,7 +59,7 @@ public class UserServiceTest {
     public void failAddUserUserAlreadyRegister() {
         doReturn(Optional.of(getUser())).when(userRepository).findByUserId("userId");
 
-        final ServerException result = assertThrows(ServerException.class, () -> target.addUser("userId", "password", "test"));
+        final ServerException result = assertThrows(ServerException.class, () -> target.addUser("userId", "password", "group"));
 
         assertThat(result.getErrorResult()).isEqualTo(ErrorCode.USER_ALREADY_REGISTER);
     }
@@ -130,13 +132,5 @@ public class UserServiceTest {
         assertThat(result.getErrorResult()).isEqualTo(ErrorCode.ILLEGAL_ARGUMENT);
 
         verify(userRepository, times(1)).findByUserId("userId");
-    }
-
-    private User getUser() {
-        return User.builder()
-                .userId("userId")
-                .password("password")
-                .group(Group.builder().name("test").build())
-                .build();
     }
 }

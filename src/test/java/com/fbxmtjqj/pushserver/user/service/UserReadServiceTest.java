@@ -1,8 +1,6 @@
 package com.fbxmtjqj.pushserver.user.service;
 
 import com.fbxmtjqj.pushserver.user.model.dto.GetUsersResponse;
-import com.fbxmtjqj.pushserver.user.model.entity.Group;
-import com.fbxmtjqj.pushserver.user.model.entity.User;
 import com.fbxmtjqj.pushserver.user.model.enums.UserType;
 import com.fbxmtjqj.pushserver.user.model.repository.UserRepository;
 import com.fbxmtjqj.pushserver.user.services.UserReadService;
@@ -15,6 +13,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
 
+import static com.fbxmtjqj.pushserver.common.dto.GroupDTO.getGroup;
+import static com.fbxmtjqj.pushserver.common.dto.UserDTO.getUser;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
@@ -28,12 +28,7 @@ public class UserReadServiceTest {
     @Test
     @DisplayName("유저조회 성공")
     public void successAddUser() {
-        doReturn(Optional.of(
-                User.builder()
-                        .userId("userId")
-                        .userType(UserType.USER)
-                        .group(Group.builder().name("group").build()).build()
-        )).when(userRepository).getUserByUserId("userId");
+        doReturn(Optional.of(getUser(getGroup(), UserType.USER))).when(userRepository).getUserByUserId("userId");
 
         final GetUsersResponse result = target.getUserByUserId("userId");
 

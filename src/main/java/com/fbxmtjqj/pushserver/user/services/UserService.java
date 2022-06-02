@@ -26,13 +26,13 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
 
-    public void addUser(final String userId, final String password, final String siteNm) {
+    public void addUser(final String userId, final String password, final String groupNm) {
         boolean isUserId = userRepository.findByUserId(userId).isPresent();
         if (isUserId) {
             throw new ServerException(ErrorCode.USER_ALREADY_REGISTER);
         }
 
-        Group group = groupRepository.findByName(siteNm).orElseGet(() -> Group.builder().name(siteNm).build());
+        Group group = groupRepository.findByName(groupNm).orElseGet(() -> Group.builder().name(groupNm).build());
         groupRepository.save(group);
 
         final User user = User.builder()
