@@ -1,7 +1,9 @@
 package com.fbxmtjqj.pushserver.user.controller;
 
+import com.fbxmtjqj.pushserver.user.model.dto.AddUserRequest;
 import com.fbxmtjqj.pushserver.user.model.dto.GetUsersResponse;
-import com.fbxmtjqj.pushserver.user.model.dto.UserRequest;
+import com.fbxmtjqj.pushserver.user.model.dto.SignInRequest;
+import com.fbxmtjqj.pushserver.user.model.dto.UpdateUserRequest;
 import com.fbxmtjqj.pushserver.user.services.UserReadService;
 import com.fbxmtjqj.pushserver.user.services.UserService;
 import com.google.gson.Gson;
@@ -53,7 +55,11 @@ public class UserControllerTest {
 
         final ResultActions resultActions = mockMvc.perform(
                 MockMvcRequestBuilders.post(url)
-                        .content(gson.toJson(getUser("test", "test", "test", null, null)))
+                        .content(gson.toJson(AddUserRequest.builder()
+                                .userId("userId")
+                                .password("password")
+                                .siteNm("siteNm")
+                                .build()))
                         .contentType(MediaType.APPLICATION_JSON)
         );
 
@@ -68,7 +74,11 @@ public class UserControllerTest {
 
         final ResultActions resultActions = mockMvc.perform(
                 MockMvcRequestBuilders.post(url)
-                        .content(gson.toJson(getUser(userId, password, siteNm, null, null)))
+                        .content(gson.toJson(AddUserRequest.builder()
+                                .userId(userId)
+                                .password(password)
+                                .siteNm(siteNm)
+                                .build()))
                         .contentType(MediaType.APPLICATION_JSON)
         );
 
@@ -82,7 +92,11 @@ public class UserControllerTest {
 
         final ResultActions resultActions = mockMvc.perform(
                 MockMvcRequestBuilders.post(url)
-                        .content(gson.toJson(getUser("test", "test", null, null, "key")))
+                        .content(gson.toJson(SignInRequest.builder()
+                                .userId("userId")
+                                .password("password")
+                                .fcmKey("fcmKey")
+                                .build()))
                         .contentType(MediaType.APPLICATION_JSON)
         );
 
@@ -92,12 +106,16 @@ public class UserControllerTest {
     @ParameterizedTest
     @MethodSource("failSignInParameter")
     @DisplayName("유저SignIn 실패 - 잘못된 파라미터")
-    public void failedSignIn(final String userId, final String password, final String key) throws Exception {
+    public void failedSignIn(final String userId, final String password, final String fcmKey) throws Exception {
         final String url = "/api/v1/signIn";
 
         final ResultActions resultActions = mockMvc.perform(
                 MockMvcRequestBuilders.post(url)
-                        .content(gson.toJson(getUser(userId, password, null, null, key)))
+                        .content(gson.toJson(SignInRequest.builder()
+                                .userId(userId)
+                                .password(password)
+                                .fcmKey(fcmKey)
+                                .build()))
                         .contentType(MediaType.APPLICATION_JSON)
         );
 
@@ -111,7 +129,10 @@ public class UserControllerTest {
 
         final ResultActions resultActions = mockMvc.perform(
                 MockMvcRequestBuilders.post(url)
-                        .content(gson.toJson(getUser("test", null, null, "USER", null)))
+                        .content(gson.toJson(UpdateUserRequest.builder()
+                                .userId("userId")
+                                .userType("USER")
+                                .build()))
                         .contentType(MediaType.APPLICATION_JSON)
         );
 
@@ -136,16 +157,6 @@ public class UserControllerTest {
 
         // then
         resultActions.andExpect(status().isOk());
-    }
-
-    private UserRequest getUser(final String userId, final String password, final String siteNm, final String userType, final String key) {
-        return UserRequest.builder()
-                .userId(userId)
-                .password(password)
-                .siteNm(siteNm)
-                .userType(userType)
-                .fcmKey(key)
-                .build();
     }
 
     private static Stream<Arguments> failAddUserParameter() {

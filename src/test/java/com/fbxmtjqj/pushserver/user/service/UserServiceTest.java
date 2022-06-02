@@ -5,9 +5,7 @@ import com.fbxmtjqj.pushserver.common.exception.ServerException;
 import com.fbxmtjqj.pushserver.common.jwt.JwtService;
 import com.fbxmtjqj.pushserver.fcm.model.entity.FCM;
 import com.fbxmtjqj.pushserver.fcm.model.repository.FCMRepository;
-import com.fbxmtjqj.pushserver.user.model.dto.AddUserResponse;
 import com.fbxmtjqj.pushserver.user.model.dto.SignInResponse;
-import com.fbxmtjqj.pushserver.user.model.dto.UpdateUserTypeResponse;
 import com.fbxmtjqj.pushserver.user.model.entity.Group;
 import com.fbxmtjqj.pushserver.user.model.entity.User;
 import com.fbxmtjqj.pushserver.user.model.repository.GroupRepository;
@@ -19,7 +17,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Optional;
@@ -49,9 +46,7 @@ public class UserServiceTest {
     public void successAddUser() {
         doReturn(getUser()).when(userRepository).save(any(User.class));
 
-        final AddUserResponse result = target.addUser("userId", "password", "test");
-
-        assertThat(result.getHttpStatus()).isEqualTo(HttpStatus.OK);
+        target.addUser("userId", "password", "test");
 
         verify(userRepository, times(1)).save(any(User.class));
         verify(groupRepository, times(1)).save(any(Group.class));
@@ -108,9 +103,7 @@ public class UserServiceTest {
     public void successUpdateUserType() {
         doReturn(Optional.of(getUser())).when(userRepository).findByUserId("userId");
 
-        final UpdateUserTypeResponse result = target.updateUserType("userId", "USER");
-
-        assertThat(result.getHttpStatus()).isEqualTo(HttpStatus.OK);
+        target.updateUserType("userId", "USER");
 
         verify(userRepository, times(1)).findByUserId("userId");
     }

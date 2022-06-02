@@ -5,16 +5,13 @@ import com.fbxmtjqj.pushserver.common.exception.ServerException;
 import com.fbxmtjqj.pushserver.common.jwt.JwtService;
 import com.fbxmtjqj.pushserver.fcm.model.entity.FCM;
 import com.fbxmtjqj.pushserver.fcm.model.repository.FCMRepository;
-import com.fbxmtjqj.pushserver.user.model.dto.AddUserResponse;
 import com.fbxmtjqj.pushserver.user.model.dto.SignInResponse;
-import com.fbxmtjqj.pushserver.user.model.dto.UpdateUserTypeResponse;
 import com.fbxmtjqj.pushserver.user.model.entity.Group;
 import com.fbxmtjqj.pushserver.user.model.entity.User;
 import com.fbxmtjqj.pushserver.user.model.enums.UserType;
 import com.fbxmtjqj.pushserver.user.model.repository.GroupRepository;
 import com.fbxmtjqj.pushserver.user.model.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,7 +26,7 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
 
-    public AddUserResponse addUser(final String userId, final String password, final String siteNm) {
+    public void addUser(final String userId, final String password, final String siteNm) {
         boolean isUserId = userRepository.findByUserId(userId).isPresent();
         if (isUserId) {
             throw new ServerException(ErrorCode.USER_ALREADY_REGISTER);
@@ -45,10 +42,6 @@ public class UserService {
                 .build();
 
         userRepository.save(user);
-
-        return AddUserResponse.builder()
-                .httpStatus(HttpStatus.OK)
-                .build();
     }
 
     public SignInResponse signIn(final String userId, final String password, final String fcmToken) {
@@ -71,7 +64,7 @@ public class UserService {
                 .build();
     }
 
-    public UpdateUserTypeResponse updateUserType(final String userId, final String type) {
+    public void updateUserType(final String userId, final String type) {
         final User user = userRepository.findByUserId(userId)
                 .orElseThrow(() -> new ServerException(ErrorCode.USER_NOT_FOUND));
 
@@ -87,9 +80,5 @@ public class UserService {
         user.setUserType(userType);
 
         userRepository.save(user);
-
-        return UpdateUserTypeResponse.builder()
-                .httpStatus(HttpStatus.OK)
-                .build();
     }
 }

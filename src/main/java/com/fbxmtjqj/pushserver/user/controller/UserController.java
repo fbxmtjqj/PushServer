@@ -1,18 +1,17 @@
 package com.fbxmtjqj.pushserver.user.controller;
 
 import com.fbxmtjqj.pushserver.user.model.dto.*;
-import com.fbxmtjqj.pushserver.user.model.validation.ValidationUser;
 import com.fbxmtjqj.pushserver.user.services.UserReadService;
 import com.fbxmtjqj.pushserver.user.services.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -21,7 +20,7 @@ public class UserController {
     private final UserService userService;
     private final UserReadService userReadService;
 
-    @GetMapping ("/api/v1/users")
+    @GetMapping("/api/v1/users")
     public ResponseEntity<List<GetUsersResponse>> getUsers() {
 
         final List<GetUsersResponse> getUsersResponseList = userReadService.getUsers();
@@ -31,32 +30,30 @@ public class UserController {
     }
 
     @PostMapping("/api/v1/users")
-    public ResponseEntity<AddUserResponse> addUser(
-            @RequestBody @Validated(ValidationUser.UserAddMarker.class) final UserRequest userRequest) {
+    public ResponseEntity<Void> addUser(
+            @RequestBody @Valid final AddUserRequest addUserRequest) {
 
-        final AddUserResponse userAddResponse = userService.addUser(userRequest.getUserId(), userRequest.getPassword(), userRequest.getSiteNm());
+        userService.addUser(addUserRequest.getUserId(), addUserRequest.getPassword(), addUserRequest.getSiteNm());
 
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(userAddResponse);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @PostMapping("/api/v1/signIn")
     public ResponseEntity<SignInResponse> signIn(
-            @RequestBody @Validated(ValidationUser.SignInMarker.class) final UserRequest userRequest) {
+            @RequestBody @Valid final SignInRequest signInRequest) {
 
-        final SignInResponse signInResponse = userService.signIn(userRequest.getUserId(), userRequest.getPassword(), userRequest.getFcmKey());
+        final SignInResponse signInResponse = userService.signIn(signInRequest.getUserId(), signInRequest.getPassword(), signInRequest.getFcmKey());
 
         return ResponseEntity.status(HttpStatus.OK)
                 .body(signInResponse);
     }
 
     @PostMapping("/api/v1/update/userType")
-    public ResponseEntity<UpdateUserTypeResponse> updateUserType(
-            @RequestBody final UserRequest userRequest) {
+    public ResponseEntity<Void> updateUserType(
+            @RequestBody @Valid final UpdateUserRequest updateUserRequest) {
 
-        final UpdateUserTypeResponse result = userService.updateUserType(userRequest.getUserId(), userRequest.getUserType());
+        userService.updateUserType(updateUserRequest.getUserId(), updateUserRequest.getUserType());
 
-        return ResponseEntity.status(HttpStatus.OK)
-                .body(result);
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 }
