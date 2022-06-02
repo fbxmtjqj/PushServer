@@ -29,7 +29,7 @@ public class UserRepositoryTest {
 
     @Test
     @DisplayName("유저등록")
-    public void addUser() {
+    public void userSave() {
         final LocalDateTime now = LocalDateTime.now().withNano(0);
         final User user = getUser();
 
@@ -44,7 +44,7 @@ public class UserRepositoryTest {
 
     @Test
     @DisplayName("유저조회")
-    public void searchUser() {
+    public void findByUserId() {
         final User user = getUser();
 
         userRepository.save(user);
@@ -54,6 +54,23 @@ public class UserRepositoryTest {
         assertThat(findResult).isNotNull();
         assertThat(findResult.getUserId()).isEqualTo("userId");
         assertThat(findResult.getPassword()).isEqualTo("password");
+        assertThat(findResult.getUserType()).isNull();
+    }
+
+
+    @Test
+    @DisplayName("유저조회 - queryDsl")
+    public void getUserByUserId() {
+        final User user = getUser();
+
+        userRepository.save(user);
+        final User findResult = userRepository.getUserByUserId("userId")
+                .orElseThrow(() -> new ServerException(ErrorCode.TEST_ERROR));
+
+        assertThat(findResult).isNotNull();
+        assertThat(findResult.getUserId()).isEqualTo("userId");
+        assertThat(findResult.getPassword()).isEqualTo("password");
+        assertThat(findResult.getGroup().getName()).isEqualTo("group");
         assertThat(findResult.getUserType()).isNull();
     }
 

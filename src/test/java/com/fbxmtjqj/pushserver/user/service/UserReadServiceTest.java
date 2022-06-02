@@ -32,15 +32,16 @@ public class UserReadServiceTest {
                 User.builder()
                         .userId("userId")
                         .userType(UserType.USER)
-                        .group(Group.builder().build()).build()
-        )).when(userRepository).findByUserId("userId");
+                        .group(Group.builder().name("group").build()).build()
+        )).when(userRepository).getUserByUserId("userId");
 
         final GetUsersResponse result = target.getUserByUserId("userId");
 
         assertThat(result).isNotNull();
         assertThat(result.getUserId()).isEqualTo("userId");
         assertThat(result.getUserType()).isEqualTo(UserType.USER);
+        assertThat(result.getGroup()).isEqualTo("group");
 
-        verify(userRepository, times(1)).findByUserId(anyString());
+        verify(userRepository, times(1)).getUserByUserId(anyString());
     }
 }

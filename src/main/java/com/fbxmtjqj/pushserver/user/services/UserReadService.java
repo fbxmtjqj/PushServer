@@ -18,13 +18,13 @@ public class UserReadService {
     private final UserRepository userRepository;
 
     public GetUsersResponse getUserByUserId(final String userId) {
-        final User userList = userRepository.findByUserId(userId)
+        final User userList = userRepository.getUserByUserId(userId)
                 .orElseThrow(() -> new ServerException(ErrorCode.USER_NOT_FOUND));
 
         return GetUsersResponse.builder()
                 .userId(userList.getUserId())
                 .userType(userList.getUserType())
-                .siteNm(userList.getGroup().getName())
+                .group(userList.getGroup().getName())
                 .build();
     }
 }

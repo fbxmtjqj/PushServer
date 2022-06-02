@@ -11,5 +11,5 @@ import lombok.RequiredArgsConstructor;
 public class GetUsersResponse {
     private final String userId;
     private final UserType userType;
-    private final String siteNm;
+    private final String group;
 }
