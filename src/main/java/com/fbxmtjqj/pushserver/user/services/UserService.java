@@ -9,7 +9,6 @@ import com.fbxmtjqj.pushserver.user.model.dto.SignInResponse;
 import com.fbxmtjqj.pushserver.user.model.entity.Group;
 import com.fbxmtjqj.pushserver.user.model.entity.User;
 import com.fbxmtjqj.pushserver.user.model.enums.UserType;
-import com.fbxmtjqj.pushserver.user.model.repository.GroupRepository;
 import com.fbxmtjqj.pushserver.user.model.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -21,7 +20,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class UserService {
     private final UserRepository userRepository;
-    private final GroupRepository groupRepository;
     private final FCMRepository fcmRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
@@ -32,8 +30,7 @@ public class UserService {
             throw new ServerException(ErrorCode.USER_ALREADY_REGISTER);
         }
 
-        Group group = groupRepository.findByName(groupNm).orElseGet(() -> Group.builder().name(groupNm).build());
-        groupRepository.save(group);
+        Group group = Group.builder().name(groupNm).build();
 
         final User user = User.builder()
                 .userId(userId)

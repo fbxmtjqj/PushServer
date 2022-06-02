@@ -6,7 +6,6 @@ import com.fbxmtjqj.pushserver.common.jwt.JwtService;
 import com.fbxmtjqj.pushserver.fcm.model.entity.FCM;
 import com.fbxmtjqj.pushserver.fcm.model.repository.FCMRepository;
 import com.fbxmtjqj.pushserver.user.model.dto.SignInResponse;
-import com.fbxmtjqj.pushserver.user.model.entity.Group;
 import com.fbxmtjqj.pushserver.user.model.entity.User;
 import com.fbxmtjqj.pushserver.user.model.repository.GroupRepository;
 import com.fbxmtjqj.pushserver.user.model.repository.UserRepository;
@@ -51,7 +50,6 @@ public class UserServiceTest {
         target.addUser("userId", "password", "group");
 
         verify(userRepository, times(1)).save(any(User.class));
-        verify(groupRepository, times(1)).save(any(Group.class));
     }
 
     @Test

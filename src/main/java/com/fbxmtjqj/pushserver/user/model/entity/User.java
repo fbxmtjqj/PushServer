@@ -28,7 +28,7 @@ public class User extends EntityDate {
     @Enumerated(EnumType.STRING)
     private UserType userType;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @JoinColumn(name = "GROUP_ID")
     private Group group;
 }
