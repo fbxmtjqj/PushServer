@@ -1,5 +1,7 @@
 package com.fbxmtjqj.pushserver.user.services;
 
+import com.fbxmtjqj.pushserver.common.exception.ErrorCode;
+import com.fbxmtjqj.pushserver.common.exception.ServerException;
 import com.fbxmtjqj.pushserver.user.model.dto.GetUsersResponse;
 import com.fbxmtjqj.pushserver.user.model.entity.User;
 import com.fbxmtjqj.pushserver.user.model.repository.UserRepository;
@@ -8,9 +10,6 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 @Log4j2
 @Service
 @RequiredArgsConstructor
@@ -18,15 +17,14 @@ import java.util.stream.Collectors;
 public class UserReadService {
     private final UserRepository userRepository;
 
-    public List<GetUsersResponse> getUsers() {
-        final List<User> userList = userRepository.findAll();
+    public GetUsersResponse getUserByUserId(final String userId) {
+        final User userList = userRepository.findByUserId(userId)
+                .orElseThrow(() -> new ServerException(ErrorCode.USER_NOT_FOUND));
 
-        return userList.stream()
-                .map(v -> GetUsersResponse.builder()
-                        .userId(v.getUserId())
-                        .userType(v.getUserType())
-                        .siteNm(v.getGroup().getName())
-                        .build())
-                .collect(Collectors.toList());
+        return GetUsersResponse.builder()
+                .userId(userList.getUserId())
+                .userType(userList.getUserType())
+                .siteNm(userList.getGroup().getName())
+                .build();
     }
 }

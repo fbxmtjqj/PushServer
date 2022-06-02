@@ -6,13 +6,9 @@ import com.fbxmtjqj.pushserver.user.services.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -20,10 +16,11 @@ public class UserController {
     private final UserService userService;
     private final UserReadService userReadService;
 
-    @GetMapping("/api/v1/users")
-    public ResponseEntity<List<GetUsersResponse>> getUsers() {
+    @GetMapping("/api/v1/users/{userId}")
+    public ResponseEntity<GetUsersResponse> getUserByUserId(
+            @Valid @PathVariable final String userId) {
 
-        final List<GetUsersResponse> getUsersResponseList = userReadService.getUsers();
+        final GetUsersResponse getUsersResponseList = userReadService.getUserByUserId(userId);
 
         return ResponseEntity.status(HttpStatus.OK)
                 .body(getUsersResponseList);

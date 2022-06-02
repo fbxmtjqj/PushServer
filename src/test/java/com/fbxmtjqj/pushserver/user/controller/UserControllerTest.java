@@ -23,9 +23,9 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import java.util.Arrays;
 import java.util.stream.Stream;
 
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doReturn;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -142,20 +142,13 @@ public class UserControllerTest {
     @Test
     @DisplayName("유저목록조회 성공")
     public void successGetUsers() throws Exception {
-        // given
-        final String url = "/api/v1/users";
-        doReturn(Arrays.asList(
-                GetUsersResponse.builder().build(),
-                GetUsersResponse.builder().build(),
-                GetUsersResponse.builder().build()
-        )).when(userReadService).getUsers();
+        final String url = "/api/v1/users/any";
+        doReturn(GetUsersResponse.builder().build()).when(userReadService).getUserByUserId(anyString());
 
-        // when
         final ResultActions resultActions = mockMvc.perform(
                 MockMvcRequestBuilders.get(url)
         );
 
-        // then
         resultActions.andExpect(status().isOk());
     }
 

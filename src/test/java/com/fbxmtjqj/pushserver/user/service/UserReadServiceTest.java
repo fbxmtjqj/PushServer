@@ -3,6 +3,7 @@ package com.fbxmtjqj.pushserver.user.service;
 import com.fbxmtjqj.pushserver.user.model.dto.GetUsersResponse;
 import com.fbxmtjqj.pushserver.user.model.entity.Group;
 import com.fbxmtjqj.pushserver.user.model.entity.User;
+import com.fbxmtjqj.pushserver.user.model.enums.UserType;
 import com.fbxmtjqj.pushserver.user.model.repository.UserRepository;
 import com.fbxmtjqj.pushserver.user.services.UserReadService;
 import org.junit.jupiter.api.DisplayName;
@@ -12,8 +13,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.Arrays;
-import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
@@ -28,16 +28,19 @@ public class UserReadServiceTest {
     @Test
     @DisplayName("유저조회 성공")
     public void successAddUser() {
-        doReturn(Arrays.asList(
-                User.builder().group(Group.builder().build()).build(),
-                User.builder().group(Group.builder().build()).build(),
-                User.builder().group(Group.builder().build()).build()
-        )).when(userRepository).findAll();
+        doReturn(Optional.of(
+                User.builder()
+                        .userId("userId")
+                        .userType(UserType.USER)
+                        .group(Group.builder().build()).build()
+        )).when(userRepository).findByUserId("userId");
 
-        final List<GetUsersResponse> result = target.getUsers();
+        final GetUsersResponse result = target.getUserByUserId("userId");
 
-        assertThat(result.size()).isEqualTo(3);
+        assertThat(result).isNotNull();
+        assertThat(result.getUserId()).isEqualTo("userId");
+        assertThat(result.getUserType()).isEqualTo(UserType.USER);
 
-        verify(userRepository, times(1)).findAll();
+        verify(userRepository, times(1)).findByUserId(anyString());
     }
 }
