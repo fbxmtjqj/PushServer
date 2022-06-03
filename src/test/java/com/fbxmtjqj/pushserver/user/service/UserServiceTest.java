@@ -44,20 +44,20 @@ public class UserServiceTest {
 
     @Test
     @DisplayName("유저추가 성공")
-    public void successAddUser() {
+    public void successCreateUser() {
         doReturn(getUser(getGroup())).when(userRepository).save(any(User.class));
 
-        target.addUser("userId", "password", "group");
+        target.createUser("userId", "password", "group");
 
         verify(userRepository, times(1)).save(any(User.class));
     }
 
     @Test
     @DisplayName("유저추가 실패 - 이미 존재하는 유저")
-    public void failAddUserUserAlreadyRegister() {
+    public void failCreateUserUserAlreadyRegister() {
         doReturn(Optional.of(getUser())).when(userRepository).findByUserId("userId");
 
-        final ServerException result = assertThrows(ServerException.class, () -> target.addUser("userId", "password", "group"));
+        final ServerException result = assertThrows(ServerException.class, () -> target.createUser("userId", "password", "group"));
 
         assertThat(result.getErrorResult()).isEqualTo(ErrorCode.USER_ALREADY_REGISTER);
     }
@@ -100,20 +100,20 @@ public class UserServiceTest {
 
     @Test
     @DisplayName("UserType 업데이트 성공")
-    public void successUpdateUserType() {
+    public void successModifyUserType() {
         doReturn(Optional.of(getUser())).when(userRepository).findByUserId("userId");
 
-        target.updateUserType("userId", "USER");
+        target.modifyUserType("userId", "USER");
 
         verify(userRepository, times(1)).findByUserId("userId");
     }
 
     @Test
     @DisplayName("UserType 업데이트 실패 - 유저 조회 실패")
-    public void failUpdateUserTypeNotFoundUser() {
+    public void failModifyUserTypeNotFoundUser() {
         doReturn(Optional.empty()).when(userRepository).findByUserId("userId");
 
-        final ServerException result = assertThrows(ServerException.class, () -> target.updateUserType("userId", "USER"));
+        final ServerException result = assertThrows(ServerException.class, () -> target.modifyUserType("userId", "USER"));
 
         assertThat(result.getErrorResult()).isEqualTo(ErrorCode.USER_NOT_FOUND);
 
@@ -122,10 +122,10 @@ public class UserServiceTest {
 
     @Test
     @DisplayName("UserType 업데이트 실패 - UserType 에러")
-    public void failUpdateUserTypeIllegalArgument() {
+    public void failModifyUserTypeIllegalArgument() {
         doReturn(Optional.of(getUser())).when(userRepository).findByUserId("userId");
 
-        final ServerException result = assertThrows(ServerException.class, () -> target.updateUserType("userId", "test"));
+        final ServerException result = assertThrows(ServerException.class, () -> target.modifyUserType("userId", "test"));
 
         assertThat(result.getErrorResult()).isEqualTo(ErrorCode.ILLEGAL_ARGUMENT);
 

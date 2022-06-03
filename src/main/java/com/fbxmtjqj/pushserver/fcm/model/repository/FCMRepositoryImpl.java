@@ -20,7 +20,7 @@ public class FCMRepositoryImpl implements FCMRepositoryCustom {
     QUser qUser = QUser.user;
 
     @Override
-    public Optional<List<FCM>> getFCMListByUserId(final String userId) {
+    public Optional<List<FCM>> findFCMListByUserId(final String userId) {
         QUser user = new QUser("userGroup");
         return Optional.ofNullable(
                 queryFactory

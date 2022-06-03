@@ -50,7 +50,7 @@ public class UserControllerTest {
 
     @Test
     @DisplayName("유저등록 성공")
-    public void successAddUser() throws Exception {
+    public void successCreateUser() throws Exception {
         final String url = "/api/v1/users";
 
         final ResultActions resultActions = mockMvc.perform(
@@ -67,9 +67,9 @@ public class UserControllerTest {
     }
 
     @ParameterizedTest
-    @MethodSource("failAddUserParameter")
+    @MethodSource("failCreateUserParameter")
     @DisplayName("유저등록 실패 - 잘못된 파라미터")
-    public void failAddUser(final String userId, final String password, final String siteNm) throws Exception {
+    public void failCreateUser(final String userId, final String password, final String siteNm) throws Exception {
         final String url = "/api/v1/users";
 
         final ResultActions resultActions = mockMvc.perform(
@@ -124,8 +124,8 @@ public class UserControllerTest {
 
     @Test
     @DisplayName("UserType 업데이트 성공")
-    public void successUpdateUserType() throws Exception {
-        final String url = "/api/v1/update/userType";
+    public void successModifyUserType() throws Exception {
+        final String url = "/api/v1/modify/userType";
 
         final ResultActions resultActions = mockMvc.perform(
                 MockMvcRequestBuilders.post(url)
@@ -143,7 +143,7 @@ public class UserControllerTest {
     @DisplayName("유저목록조회 성공")
     public void successGetUsers() throws Exception {
         final String url = "/api/v1/users/any";
-        doReturn(GetUsersResponse.builder().build()).when(userReadService).getUserByUserId(anyString());
+        doReturn(GetUsersResponse.builder().build()).when(userReadService).findUserByUserId(anyString());
 
         final ResultActions resultActions = mockMvc.perform(
                 MockMvcRequestBuilders.get(url)
@@ -152,7 +152,7 @@ public class UserControllerTest {
         resultActions.andExpect(status().isOk());
     }
 
-    private static Stream<Arguments> failAddUserParameter() {
+    private static Stream<Arguments> failCreateUserParameter() {
         return Stream.of(
                 Arguments.of(null, "test", "test"),
                 Arguments.of("test", null, "test"),

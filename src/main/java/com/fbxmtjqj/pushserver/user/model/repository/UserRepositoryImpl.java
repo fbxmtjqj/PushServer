@@ -18,7 +18,7 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
     QGroup qGroup = QGroup.group;
 
     @Override
-    public Optional<User> getUserByUserId(final String userId) {
+    public Optional<User> findUserAndGroupByUserId(final String userId) {
         return Optional.ofNullable(
                 queryFactory
                         .selectFrom(qUser)

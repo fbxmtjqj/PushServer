@@ -1,7 +1,7 @@
 package com.fbxmtjqj.pushserver.fcm.controller;
 
-import com.fbxmtjqj.pushserver.fcm.model.dto.AddTokenRequest;
-import com.fbxmtjqj.pushserver.fcm.service.FCMService;
+import com.fbxmtjqj.pushserver.fcm.model.dto.SendMessageRequest;
+import com.fbxmtjqj.pushserver.fcm.service.MessageService;
 import com.google.gson.Gson;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -24,11 +24,11 @@ import java.util.stream.Stream;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(MockitoExtension.class)
-public class FCMControllerTest {
+public class MessageControllerTest {
     @InjectMocks
-    private FCMController target;
+    private MessageController target;
     @Mock
-    private FCMService fcmService;
+    private MessageService messageService;
 
     private MockMvc mockMvc;
     private Gson gson;
@@ -41,13 +41,13 @@ public class FCMControllerTest {
     }
 
     @Test
-    @DisplayName("AddToken 성공")
-    public void successInputFCMToken() throws Exception {
-        final String url = "/api/v1/input/fcmToken";
+    @DisplayName("SendMessage 성공")
+    public void successSendMessage() throws Exception {
+        final String url = "/api/v1/send/message";
 
         final ResultActions resultActions = mockMvc.perform(
                 MockMvcRequestBuilders.post(url)
-                        .content(gson.toJson(AddTokenRequest.builder().userId("userId").token("token").build()))
+                        .content(gson.toJson(SendMessageRequest.builder().userId("userId").content("content").build()))
                         .contentType(MediaType.APPLICATION_JSON)
         );
 
@@ -55,21 +55,21 @@ public class FCMControllerTest {
     }
 
     @ParameterizedTest
-    @MethodSource("failInputFCMTokenParameter")
-    @DisplayName("AddToken 실패 - 잘못된 파라미터")
-    public void failInputFCMToken(final String userId, final String token) throws Exception {
-        final String url = "/api/v1/input/fcmToken";
+    @MethodSource("failSendMessageParameter")
+    @DisplayName("SendMessage 실패 - 잘못된 파라미터")
+    public void failSendMessage(final String userId, final String content) throws Exception {
+        final String url = "/api/v1/send/message";
 
         final ResultActions resultActions = mockMvc.perform(
                 MockMvcRequestBuilders.post(url)
-                        .content(gson.toJson(AddTokenRequest.builder().userId(userId).token(token).build()))
+                        .content(gson.toJson(SendMessageRequest.builder().userId(userId).content(content).build()))
                         .contentType(MediaType.APPLICATION_JSON)
         );
 
         resultActions.andExpect(status().isBadRequest());
     }
 
-    private static Stream<Arguments> failInputFCMTokenParameter() {
+    private static Stream<Arguments> failSendMessageParameter() {
         return Stream.of(
                 Arguments.of(null, "test"),
                 Arguments.of("test", null)

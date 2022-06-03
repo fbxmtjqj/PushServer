@@ -24,7 +24,7 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
 
-    public void addUser(final String userId, final String password, final String groupNm) {
+    public void createUser(final String userId, final String password, final String groupNm) {
         boolean isUserId = userRepository.findByUserId(userId).isPresent();
         if (isUserId) {
             throw new ServerException(ErrorCode.USER_ALREADY_REGISTER);
@@ -61,7 +61,7 @@ public class UserService {
                 .build();
     }
 
-    public void updateUserType(final String userId, final String type) {
+    public void modifyUserType(final String userId, final String type) {
         final User user = userRepository.findByUserId(userId)
                 .orElseThrow(() -> new ServerException(ErrorCode.USER_NOT_FOUND));
 

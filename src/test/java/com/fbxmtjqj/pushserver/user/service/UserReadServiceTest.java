@@ -28,15 +28,15 @@ public class UserReadServiceTest {
     @Test
     @DisplayName("유저조회 성공")
     public void successAddUser() {
-        doReturn(Optional.of(getUser(getGroup(), UserType.USER))).when(userRepository).getUserByUserId("userId");
+        doReturn(Optional.of(getUser(getGroup(), UserType.USER))).when(userRepository).findUserAndGroupByUserId("userId");
 
-        final GetUsersResponse result = target.getUserByUserId("userId");
+        final GetUsersResponse result = target.findUserByUserId("userId");
 
         assertThat(result).isNotNull();
         assertThat(result.getUserId()).isEqualTo("userId");
         assertThat(result.getUserType()).isEqualTo(UserType.USER);
         assertThat(result.getGroup()).isEqualTo("group");
 
-        verify(userRepository, times(1)).getUserByUserId(anyString());
+        verify(userRepository, times(1)).findUserAndGroupByUserId(anyString());
     }
 }

@@ -17,20 +17,20 @@ public class UserController {
     private final UserReadService userReadService;
 
     @GetMapping("/api/v1/users/{userId}")
-    public ResponseEntity<GetUsersResponse> getUserByUserId(
+    public ResponseEntity<GetUsersResponse> findUserByUserId(
             @Valid @PathVariable final String userId) {
 
-        final GetUsersResponse getUsersResponseList = userReadService.getUserByUserId(userId);
+        final GetUsersResponse getUsersResponseList = userReadService.findUserByUserId(userId);
 
         return ResponseEntity.status(HttpStatus.OK)
                 .body(getUsersResponseList);
     }
 
     @PostMapping("/api/v1/users")
-    public ResponseEntity<Void> addUser(
+    public ResponseEntity<Void> createUser(
             @RequestBody @Valid final AddUserRequest addUserRequest) {
 
-        userService.addUser(addUserRequest.getUserId(), addUserRequest.getPassword(), addUserRequest.getSiteNm());
+        userService.createUser(addUserRequest.getUserId(), addUserRequest.getPassword(), addUserRequest.getSiteNm());
 
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
@@ -45,11 +45,11 @@ public class UserController {
                 .body(signInResponse);
     }
 
-    @PostMapping("/api/v1/update/userType")
-    public ResponseEntity<Void> updateUserType(
+    @PostMapping("/api/v1/modify/userType")
+    public ResponseEntity<Void> modifyUserType(
             @RequestBody @Valid final UpdateUserRequest updateUserRequest) {
 
-        userService.updateUserType(updateUserRequest.getUserId(), updateUserRequest.getUserType());
+        userService.modifyUserType(updateUserRequest.getUserId(), updateUserRequest.getUserType());
 
         return ResponseEntity.status(HttpStatus.OK).build();
     }

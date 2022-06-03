@@ -69,7 +69,7 @@ public class FCMRepositoryTest {
         userRepository.save(user);
         fcmRepository.save(fcm);
 
-        final List<FCM> result = fcmRepository.getFCMListByUserId(userId)
+        final List<FCM> result = fcmRepository.findFCMListByUserId(userId)
                 .orElseThrow(() -> new ServerException(ErrorCode.TEST_ERROR));
 
         assertThat(result).isNotNull();
@@ -88,7 +88,7 @@ public class FCMRepositoryTest {
 
         fcmRepository.deleteByToken(token);
 
-        final List<FCM> result = fcmRepository.getFCMListByUserId(userId)
+        final List<FCM> result = fcmRepository.findFCMListByUserId(userId)
                 .orElseThrow(() -> new ServerException(ErrorCode.TEST_ERROR));
 
         assertThat(result).isNotNull();

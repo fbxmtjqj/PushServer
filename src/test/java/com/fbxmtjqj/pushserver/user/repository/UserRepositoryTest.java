@@ -70,7 +70,7 @@ public class UserRepositoryTest {
         final User user = getUser(group);
 
         userRepository.save(user);
-        final User findResult = userRepository.getUserByUserId("userId")
+        final User findResult = userRepository.findUserAndGroupByUserId("userId")
                 .orElseThrow(() -> new ServerException(ErrorCode.TEST_ERROR));
 
         assertThat(findResult).isNotNull();

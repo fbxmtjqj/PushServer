@@ -6,5 +6,5 @@ import java.util.Optional;
 
 public interface UserRepositoryCustom {
 
-    Optional<User> getUserByUserId(final String userId);
+    Optional<User> findUserAndGroupByUserId(final String userId);
 }

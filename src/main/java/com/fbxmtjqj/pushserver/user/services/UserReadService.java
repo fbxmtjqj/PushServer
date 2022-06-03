@@ -17,8 +17,8 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserReadService {
     private final UserRepository userRepository;
 
-    public GetUsersResponse getUserByUserId(final String userId) {
-        final User userList = userRepository.getUserByUserId(userId)
+    public GetUsersResponse findUserByUserId(final String userId) {
+        final User userList = userRepository.findUserAndGroupByUserId(userId)
                 .orElseThrow(() -> new ServerException(ErrorCode.USER_NOT_FOUND));
 
         return GetUsersResponse.builder()

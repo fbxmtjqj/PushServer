@@ -7,5 +7,5 @@ import java.util.Optional;
 
 public interface FCMRepositoryCustom {
 
-    Optional<List<FCM>> getFCMListByUserId(final String userId);
+    Optional<List<FCM>> findFCMListByUserId(final String userId);
 }
